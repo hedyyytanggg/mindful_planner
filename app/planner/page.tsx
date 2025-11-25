@@ -1,0 +1,371 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { DeepWorkZone } from '@/components/Planner/DeepWorkZone';
+import { QuickWins } from '@/components/Planner/QuickWins';
+import { MakeItHappen } from '@/components/Planner/MakeItHappen';
+import { RechargeZone } from '@/components/Planner/RechargeZone';
+import { LittleJoys } from '@/components/Planner/LittleJoys';
+import { ReflectionToday } from '@/components/Planner/ReflectionToday';
+import { FocusTomorrow } from '@/components/Planner/FocusTomorrow';
+import { Button } from '@/components/Common';
+
+interface DeepWorkItem {
+    id: string;
+    title: string;
+    timeEstimate?: number;
+    notes?: string;
+    completed: boolean;
+}
+
+interface QuickWinItem {
+    id: string;
+    title: string;
+    completed: boolean;
+}
+
+interface MakeItHappenItem {
+    id: string;
+    task: string;
+    completed: boolean;
+}
+
+interface RechargeItem {
+    id: string;
+    activity: string;
+    completed: boolean;
+}
+
+export default function PlannerPage() {
+    // Date State
+    const [currentDate, setCurrentDate] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Deep Work State
+    const [deepWork, setDeepWork] = useState<DeepWorkItem[]>([]);
+
+    // Quick Wins State
+    const [quickWins, setQuickWins] = useState<QuickWinItem[]>([]);
+
+    // Make It Happen State
+    const [makeItHappen, setMakeItHappen] = useState<MakeItHappenItem | null>(null);
+
+    // Recharge State
+    const [recharge, setRecharge] = useState<RechargeItem | null>(null);
+
+    // Little Joys State
+    const [littleJoys, setLittleJoys] = useState<string[]>([]);
+
+    // Reflection State
+    const [reflection, setReflection] = useState<string | null>(null);
+
+    // Focus for Tomorrow State
+    const [focusTomorrow, setFocusTomorrow] = useState<string | null>(null);
+
+    // Initialize date and load data from localStorage
+    useEffect(() => {
+        const today = new Date().toISOString().split('T')[0];
+        setCurrentDate(today);
+        loadPlanForDate(today);
+        setIsLoading(false);
+    }, []);
+
+    // Save plan to localStorage
+    const savePlanForDate = (date: string) => {
+        const plan = {
+            deepWork,
+            quickWins,
+            makeItHappen,
+            recharge,
+            littleJoys,
+            reflection,
+            focusTomorrow,
+        };
+        localStorage.setItem(`plan_${date}`, JSON.stringify(plan));
+    };
+
+    // Load plan from localStorage
+    const loadPlanForDate = (date: string) => {
+        const saved = localStorage.getItem(`plan_${date}`);
+        if (saved) {
+            const plan = JSON.parse(saved);
+            setDeepWork(plan.deepWork || []);
+            setQuickWins(plan.quickWins || []);
+            setMakeItHappen(plan.makeItHappen || null);
+            setRecharge(plan.recharge || null);
+            setLittleJoys(plan.littleJoys || []);
+            setReflection(plan.reflection || null);
+            setFocusTomorrow(plan.focusTomorrow || null);
+        } else {
+            // Clear state for new date
+            setDeepWork([]);
+            setQuickWins([]);
+            setMakeItHappen(null);
+            setRecharge(null);
+            setLittleJoys([]);
+            setReflection(null);
+            setFocusTomorrow(null);
+        }
+    };
+
+    // Handle date change
+    const handleDateChange = (newDate: string) => {
+        savePlanForDate(currentDate);
+        setCurrentDate(newDate);
+        loadPlanForDate(newDate);
+    };
+
+    // Navigate to previous day
+    const goToPreviousDay = () => {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() - 1);
+        handleDateChange(date.toISOString().split('T')[0]);
+    };
+
+    // Navigate to next day
+    const goToNextDay = () => {
+        const date = new Date(currentDate);
+        date.setDate(date.getDate() + 1);
+        handleDateChange(date.toISOString().split('T')[0]);
+    };
+
+    // Navigate to today
+    const goToToday = () => {
+        const today = new Date().toISOString().split('T')[0];
+        handleDateChange(today);
+    };
+
+    // Auto-save whenever any state changes
+    useEffect(() => {
+        if (!isLoading && currentDate) {
+            savePlanForDate(currentDate);
+        }
+    }, [deepWork, quickWins, makeItHappen, recharge, littleJoys, reflection, focusTomorrow, isLoading, currentDate]);
+
+    // Deep Work Handlers
+    const handleAddDeepWork = (item: { title: string; timeEstimate?: number; notes?: string; completed: boolean }) => {
+        const newItem: DeepWorkItem = {
+            id: Math.random().toString(),
+            ...item,
+        };
+        setDeepWork([...deepWork, newItem]);
+    };
+
+    const handleUpdateDeepWork = (id: string, updates: Partial<DeepWorkItem>) => {
+        setDeepWork(deepWork.map(item => item.id === id ? { ...item, ...updates } : item));
+    };
+
+    const handleDeleteDeepWork = (id: string) => {
+        setDeepWork(deepWork.filter(item => item.id !== id));
+    };
+
+    // Quick Wins Handlers
+    const handleAddQuickWin = (item: { title: string; completed: boolean }) => {
+        const newItem: QuickWinItem = {
+            id: Math.random().toString(),
+            ...item,
+        };
+        setQuickWins([...quickWins, newItem]);
+    };
+
+    const handleUpdateQuickWin = (id: string, updates: Partial<QuickWinItem>) => {
+        setQuickWins(quickWins.map(item => item.id === id ? { ...item, ...updates } : item));
+    };
+
+    const handleDeleteQuickWin = (id: string) => {
+        setQuickWins(quickWins.filter(item => item.id !== id));
+    };
+
+    // Make It Happen Handlers
+    const handleAddMakeItHappen = (item: { task: string; completed: boolean }) => {
+        const newItem: MakeItHappenItem = {
+            id: Math.random().toString(),
+            ...item,
+        };
+        setMakeItHappen(newItem);
+    };
+
+    const handleUpdateMakeItHappen = (id: string, updates: Partial<MakeItHappenItem>) => {
+        if (makeItHappen?.id === id) {
+            setMakeItHappen({ ...makeItHappen, ...updates });
+        }
+    };
+
+    const handleDeleteMakeItHappen = () => {
+        setMakeItHappen(null);
+    };
+
+    // Recharge Handlers
+    const handleAddRecharge = (item: { activity: string; completed: boolean }) => {
+        const newItem: RechargeItem = {
+            id: Math.random().toString(),
+            ...item,
+        };
+        setRecharge(newItem);
+    };
+
+    const handleUpdateRecharge = (id: string, updates: Partial<RechargeItem>) => {
+        if (recharge?.id === id) {
+            setRecharge({ ...recharge, ...updates });
+        }
+    };
+
+    // Little Joys Handlers
+    const handleAddJoy = (joy: string) => {
+        setLittleJoys([...littleJoys, joy]);
+    };
+
+    const handleDeleteJoy = (index: number) => {
+        setLittleJoys(littleJoys.filter((_, i) => i !== index));
+    };
+
+    // Export Plan
+    const handleExport = () => {
+        const plan = {
+            date: new Date().toLocaleDateString(),
+            deepWork: deepWork.map(d => ({ title: d.title, time: d.timeEstimate, notes: d.notes, done: d.completed })),
+            quickWins: quickWins.map(q => ({ title: q.title, done: q.completed })),
+            makeItHappen: makeItHappen?.task,
+            recharge: recharge?.activity,
+            littleJoys,
+            reflection,
+            focusTomorrow,
+        };
+
+        const dataStr = JSON.stringify(plan, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `daily-plan-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+    };
+
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-50">
+            {/* Header */}
+            <header className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
+                <div className="max-w-6xl mx-auto px-6 py-6">
+                    <div className="flex justify-between items-center mb-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">🧘 Your Daily Plan</h1>
+                            <p className="text-sm text-gray-600">
+                                {currentDate && new Date(currentDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                            </p>
+                        </div>
+                        <Button onClick={handleExport} variant="secondary">
+                            📥 Export
+                        </Button>
+                    </div>
+
+                    {/* Date Navigation */}
+                    <div className="flex items-center gap-2 pt-4 border-t border-gray-200">
+                        <button
+                            onClick={goToPreviousDay}
+                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition"
+                            title="Previous day"
+                        >
+                            ← Prev
+                        </button>
+
+                        <input
+                            type="date"
+                            value={currentDate}
+                            onChange={(e) => handleDateChange(e.target.value)}
+                            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+
+                        <button
+                            onClick={goToNextDay}
+                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition"
+                            title="Next day"
+                        >
+                            Next →
+                        </button>
+
+                        <div className="flex-1" />
+
+                        <button
+                            onClick={goToToday}
+                            className="px-3 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition"
+                            title="Jump to today"
+                        >
+                            📅 Today
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            {/* Main Grid */}
+            <main className="max-w-6xl mx-auto px-6 py-8">
+                {/* Progress Summary */}
+                <div className="grid grid-cols-4 gap-4 mb-8">
+                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-sm">Deep Work</p>
+                        <p className="text-2xl font-bold text-blue-600">{deepWork.filter(d => d.completed).length}/{deepWork.length}</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-sm">Quick Wins</p>
+                        <p className="text-2xl font-bold text-yellow-600">{quickWins.filter(q => q.completed).length}/{quickWins.length}</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-sm">Make It Happen</p>
+                        <p className="text-2xl font-bold text-red-600">{makeItHappen?.completed ? '✓' : '○'}</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-sm">Little Joys</p>
+                        <p className="text-2xl font-bold text-purple-600">{littleJoys.length}/3</p>
+                    </div>
+                </div>
+
+                {/* Planning Zones Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <DeepWorkZone
+                        items={deepWork}
+                        onAdd={handleAddDeepWork}
+                        onUpdate={handleUpdateDeepWork}
+                        onDelete={handleDeleteDeepWork}
+                    />
+                    <QuickWins
+                        items={quickWins}
+                        onAdd={handleAddQuickWin}
+                        onUpdate={handleUpdateQuickWin}
+                        onDelete={handleDeleteQuickWin}
+                    />
+                    <MakeItHappen
+                        item={makeItHappen}
+                        onAdd={handleAddMakeItHappen}
+                        onUpdate={handleUpdateMakeItHappen}
+                        onDelete={handleDeleteMakeItHappen}
+                    />
+                    <RechargeZone
+                        item={recharge}
+                        onAdd={handleAddRecharge}
+                        onUpdate={handleUpdateRecharge}
+                    />
+                </div>
+
+                {/* Evening Reflection */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <LittleJoys
+                        joys={littleJoys}
+                        onAdd={handleAddJoy}
+                        onDelete={handleDeleteJoy}
+                    />
+                    <ReflectionToday
+                        content={reflection}
+                        onSave={setReflection}
+                    />
+                </div>
+
+                {/* Tomorrow's Focus */}
+                <div className="mt-6">
+                    <FocusTomorrow
+                        content={focusTomorrow}
+                        onSave={setFocusTomorrow}
+                    />
+                </div>
+            </main>
+        </div>
+    );
+}
