@@ -242,9 +242,9 @@ export default function PlannerPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-50">
-            {/* Header */}
-            <header className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
+        <div className="bg-gradient-to-b from-blue-50 to-gray-50 min-h-screen">
+            {/* Planner Subheader */}
+            <div className="bg-white shadow-sm border-b border-gray-200 sticky top-16 z-10">
                 <div className="max-w-6xl mx-auto px-6 py-6">
                     <div className="flex justify-between items-center mb-4">
                         <div>
@@ -294,7 +294,7 @@ export default function PlannerPage() {
                         </button>
                     </div>
                 </div>
-            </header>
+            </div>
 
             {/* Main Grid */}
             <main className="max-w-6xl mx-auto px-6 py-8">
