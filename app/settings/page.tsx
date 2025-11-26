@@ -34,7 +34,7 @@ export default function SettingsPage() {
             <div className="max-w-2xl mx-auto px-6">
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">⚙️ Settings</h1>
-                    <p className="text-gray-600">Customize your Mindful Daily Planner experience</p>
+                    <p className="text-gray-600">Customize your Mindful Planner experience</p>
                 </div>
 
                 {saved && (

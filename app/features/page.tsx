@@ -67,7 +67,7 @@ export default function FeaturesPage() {
                 <Card padding="md" className="mb-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Core Capabilities</h2>
                     <p className="text-gray-700 leading-relaxed">
-                        Mindful Daily Planner comes with 7 purposeful planning zones designed to help you structure your day with intention, balance productivity with wellness, and build sustainable habits. Each zone serves a specific purpose in your daily workflow.
+                        Mindful Planner comes with 7 purposeful planning zones designed to help you structure your day with intention, balance productivity with wellness, and build sustainable habits. Each zone serves a specific purpose in your daily workflow.
                     </p>
                 </Card>
 

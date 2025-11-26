@@ -1,4 +1,4 @@
-import React, { TextareaHTMLAttributes } from 'react';
+import React, { TextareaHTMLAttributes, useId } from 'react';
 
 interface TextareaProps
     extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -26,7 +26,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         },
         ref
     ) => {
-        const textareaId = id || `textarea-${Math.random()}`;
+        const generatedId = useId();
+        const textareaId = id || generatedId;
         const charCount = value ? String(value).length : 0;
         const effectiveMaxLength = charLimit || maxLength;
 
@@ -48,7 +49,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
                     maxLength={effectiveMaxLength}
                     onChange={onChange}
                     className={`
-            w-full px-4 py-2 border rounded-lg
+            w-full px-4 py-2 border rounded-lg text-gray-900
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
             transition-colors duration-200 resize-none
             ${error ? 'border-red-500' : 'border-gray-300'}

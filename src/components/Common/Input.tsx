@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react';
+import React, { InputHTMLAttributes, useId } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
@@ -21,7 +21,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         },
         ref
     ) => {
-        const inputId = id || `input-${Math.random()}`;
+        const generatedId = useId();
+        const inputId = id || generatedId;
 
         return (
             <div className={fullWidth ? 'w-full' : ''}>
@@ -39,7 +40,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     id={inputId}
                     type={type}
                     className={`
-            w-full px-4 py-2 border rounded-lg
+            w-full px-4 py-2 border rounded-lg text-gray-900
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
             transition-colors duration-200
             ${error ? 'border-red-500' : 'border-gray-300'}

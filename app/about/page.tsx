@@ -7,7 +7,7 @@ export default function AboutPage() {
         <div className="bg-gradient-to-b from-blue-50 to-gray-50 min-h-screen py-8">
             <div className="max-w-3xl mx-auto px-6">
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">🧘 About Mindful Daily Planner</h1>
+                    <h1 className="text-4xl font-bold text-gray-900 mb-2">🧘 About Mindful Planner</h1>
                     <p className="text-gray-600">Learn more about our mission and vision</p>
                 </div>
 
@@ -16,7 +16,7 @@ export default function AboutPage() {
                     <Card padding="md">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
                         <p className="text-gray-700 leading-relaxed">
-                            We believe that intentional planning leads to meaningful productivity. Mindful Daily Planner is designed to help people structure their days with purpose, balance work with wellness, and build sustainable habits that lead to both achievement and well-being.
+                            We believe that intentional planning leads to meaningful productivity. Mindful Planner is designed to help people structure their days with purpose, balance work with wellness, and build sustainable habits that lead to both achievement and well-being.
                         </p>
                     </Card>
 
@@ -55,7 +55,7 @@ export default function AboutPage() {
                     <Card padding="md">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Team</h2>
                         <p className="text-gray-700 leading-relaxed mb-6">
-                            Mindful Daily Planner was built by a passionate team of designers, developers, and productivity enthusiasts who believe that technology should serve people, not the other way around.
+                            Mindful Planner was built by a passionate team of designers, developers, and productivity enthusiasts who believe that technology should serve people, not the other way around.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="text-center">

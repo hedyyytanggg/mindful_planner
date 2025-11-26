@@ -32,8 +32,8 @@ interface MakeItHappenItem {
 
 interface RechargeItem {
     id: string;
-    activity: string;
-    completed: boolean;
+    activities: string[];
+    completed: boolean[];
 }
 
 export default function PlannerPage() {
@@ -196,7 +196,7 @@ export default function PlannerPage() {
     };
 
     // Recharge Handlers
-    const handleAddRecharge = (item: { activity: string; completed: boolean }) => {
+    const handleAddRecharge = (item: { activities: string[]; completed: boolean[] }) => {
         const newItem: RechargeItem = {
             id: Math.random().toString(),
             ...item,
@@ -226,7 +226,7 @@ export default function PlannerPage() {
             deepWork: deepWork.map(d => ({ title: d.title, time: d.timeEstimate, notes: d.notes, done: d.completed })),
             quickWins: quickWins.map(q => ({ title: q.title, done: q.completed })),
             makeItHappen: makeItHappen?.task,
-            recharge: recharge?.activity,
+            recharge: recharge ? { activities: recharge.activities, completed: recharge.completed } : null,
             littleJoys,
             reflection,
             focusTomorrow,
@@ -250,7 +250,11 @@ export default function PlannerPage() {
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900">🧘 Your Daily Plan</h1>
                             <p className="text-sm text-gray-600">
-                                {currentDate && new Date(currentDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                {currentDate && (() => {
+                                    const [year, month, day] = currentDate.split('-').map(Number);
+                                    const date = new Date(year, month - 1, day);
+                                    return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                                })()}
                             </p>
                         </div>
                         <Button onClick={handleExport} variant="secondary">
@@ -262,8 +266,8 @@ export default function PlannerPage() {
                     <div className="flex items-center gap-2 pt-4 border-t border-gray-200">
                         <button
                             onClick={goToPreviousDay}
-                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition"
-                            title="Previous day"
+                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-label="Go to previous day"
                         >
                             ← Prev
                         </button>
@@ -273,12 +277,13 @@ export default function PlannerPage() {
                             value={currentDate}
                             onChange={(e) => handleDateChange(e.target.value)}
                             className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-label="Select a date"
                         />
 
                         <button
                             onClick={goToNextDay}
-                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition"
-                            title="Next day"
+                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-label="Go to next day"
                         >
                             Next →
                         </button>
@@ -287,7 +292,8 @@ export default function PlannerPage() {
 
                         <button
                             onClick={goToToday}
-                            className="px-3 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition"
+                            className="px-3 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            aria-label="Go to today"
                             title="Jump to today"
                         >
                             📅 Today

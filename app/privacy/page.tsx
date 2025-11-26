@@ -15,7 +15,7 @@ export default function PrivacyPage() {
                     <Card padding="md">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
                         <p className="text-gray-700 leading-relaxed">
-                            Mindful Daily Planner ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.
+                            Mindful Planner ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our application.
                         </p>
                     </Card>
 

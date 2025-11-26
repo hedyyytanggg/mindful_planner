@@ -1,9 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export function Footer() {
-    const currentYear = new Date().getFullYear();
+    const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
+
+    useEffect(() => {
+        // Ensure year matches on client after hydration
+        setCurrentYear(new Date().getFullYear());
+    }, []);
 
     return (
         <footer className="bg-gray-900 text-gray-300 mt-16 border-t border-gray-800">
@@ -120,7 +126,7 @@ export function Footer() {
                     {/* Copyright */}
                     <div className="text-center text-sm text-gray-500">
                         <p>
-                            © {currentYear} Mindful Daily Planner. All rights reserved.
+                            © {currentYear} Mindful Planner. All rights reserved.
                         </p>
                     </div>
                 </div>
