@@ -101,8 +101,6 @@ mindful-daily-planner/
 │   ├── unit/                     # Unit tests
 │   ├── integration/              # API integration tests
 │   └── e2e/                      # End-to-end tests
-├── prisma/
-│   └── schema.prisma            # Database schema (if using Prisma)
 ├── next.config.ts
 ├── tsconfig.json
 ├── tailwind.config.ts
@@ -286,7 +284,7 @@ AWS_REGION=us-east-1
 #### Sprint 2: Core Data Model & API (Week 2)
 **Tasks:**
 - [ ] Design and implement database schema (daily_plans, zones).
-- [ ] Create Prisma models (if using Prisma) or raw SQL migrations.
+- [ ] Set up database migrations.
 - [ ] Build API endpoints for CRUD operations:
   - `POST /api/plans` (create daily plan)
   - `GET /api/plans/[date]` (fetch plan for date)
@@ -620,7 +618,6 @@ AWS_REGION=us-east-1
 - **Runtime:** Node.js 18+
 - **Framework:** Next.js API Routes (or Express.js if decoupled)
 - **Database:** PostgreSQL 14+
-- **ORM:** Prisma (recommended) or Sequelize
 - **Authentication:** NextAuth.js 4.x or Auth0
 - **Email:** SendGrid or Mailgun
 - **Logging:** Pino or Winston
@@ -680,7 +677,7 @@ AWS_REGION=us-east-1
 - **Input Validation:** Zod schema validation on all API inputs.
 - **CSRF Protection:** CSRF tokens in forms (Next.js built-in).
 - **Rate Limiting:** Implement per IP and per user.
-- **SQL Injection:** Use parameterized queries (Prisma/ORM).
+- **SQL Injection:** Use parameterized queries or an ORM.
 - **Secrets Management:** Environment variables in .env.local (not committed).
 - **Dependency Scanning:** npm audit, Snyk, or Dependabot.
 
@@ -809,7 +806,6 @@ npm run test:coverage    # Test coverage report
 npm run lint             # ESLint
 npm run format           # Prettier
 npm run storybook        # Storybook UI
-npx prisma migrate dev   # Database migration (if using Prisma)
 ```
 
 ### Key Documentation Links

@@ -133,8 +133,7 @@ Lines 85-107: loadPlanForDate() function
 Lines 135-141: Auto-save effect hook
 
 Database setup (Phase 2):
-/Users/hedytang/ai/mindful/prisma/schema.prisma
-/Users/hedytang/ai/mindful/src/lib/prisma.ts
+See IMPLEMENTATION.md for database configuration guide
 ```
 
 ---

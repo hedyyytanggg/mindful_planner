@@ -9,12 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@prisma/client": "^7.0.1",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "next": "16.0.4",
     "next-auth": "^4.24.13",
-    "prisma": "^7.0.1",
+    "pg": "^8.11.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "zod": "^4.1.13"
@@ -22,6 +21,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.11.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

@@ -167,7 +167,7 @@ settings: {
 │  /app/api/zones/route.ts               │
 │  /app/api/settings/route.ts            │
 └────────┬─────────────────────────────┘
-         │ Prisma ORM
+         │ Database adapter
          ↓
 ┌────────────────────────────────────────┐
 │      PostgreSQL Database               │

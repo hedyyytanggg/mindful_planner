@@ -193,7 +193,7 @@ To move beyond local storage, you'll need to:
 Frontend (React) 
     ↓ API calls
 Next.js API Routes (/app/api/plans, /zones)
-    ↓ Prisma ORM
+    ↓ Database adapter
 PostgreSQL Database
 ```
 
@@ -218,8 +218,8 @@ PostgreSQL Database
 
 3. **Configure database connection:**
    - Set `DATABASE_URL` in `.env.local`
-   - Run `npx prisma db push`
-   - Prisma schema is already defined ✓
+   - Run database migrations
+   - Database schema should be defined
 
 ---
 

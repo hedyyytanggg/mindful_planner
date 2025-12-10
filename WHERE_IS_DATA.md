@@ -230,15 +230,11 @@ Consider adding PostgreSQL + API when you need:
 Your configuration files:
 ```
 /Users/hedytang/ai/mindful/
-├── .env.local                    (DATABASE_URL, etc.)
-├── prisma/
-│   └── schema.prisma             (Database schema - ready for use)
-├── src/lib/
-│   └── prisma.ts                 (Prisma client config)
+├── .env.local                    (Configuration variables)
 ├── app/
 │   └── planner/page.tsx          (Auto-save code here)
 └── DATA_STORAGE.md              (Full documentation)
-```
+````
 
 ---
 
@@ -311,6 +307,5 @@ Phase 3 (Future)
 1. **For Testing:** Current setup is perfect ✓
 2. **For Production:** Plan to add API endpoints (see IMPLEMENTATION.md)
 3. **For Backup:** Regularly export your data (DATA_GUIDE.md)
-4. **For Migration:** Database schema ready to use (prisma/schema.prisma)
 
 **Your data is safe, auto-saved, and ready to be backed up anytime!** 🎉

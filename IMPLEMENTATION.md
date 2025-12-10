@@ -1,5 +1,7 @@
 ## Implementation Guide — Mindful Daily Planner
 
+> **Note:** This document was created with Prisma ORM in mind. Prisma has been removed from the codebase. Use this as a historical reference, but be aware that Prisma-specific steps and code examples should be adapted for your chosen database solution.
+
 This document provides **step-by-step, incremental coding instructions** to build the Mindful Daily Planner from scratch. Each step is small, testable, and builds on the previous one.
 
 ---
