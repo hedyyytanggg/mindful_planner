@@ -1,14 +1,3 @@
-/**
- * Example API Route: Get Daily Plan
- * 
- * Demonstrates how to use the database helpers
- * 
- * Endpoint: GET /api/plans/[date]
- * Query: ?userId=123
- * 
- * Response: { id, user_id, plan_date, deep_work, quick_wins, ... }
- */
-
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrCreateDailyPlan, updateDailyPlan } from '@/lib/dbHelpers';
 
@@ -28,13 +17,13 @@ export async function GET(
             );
         }
 
-        const plan = await getOrCreateDailyPlan(parseInt(userId), date);
+        const plan = await getOrCreateDailyPlan(userId, date);
 
         return NextResponse.json(plan);
     } catch (error) {
-        console.error('API error:', error);
+        console.error('API GET error:', error);
         return NextResponse.json(
-            { error: 'Failed to fetch plan' },
+            { error: 'Failed to fetch plan', details: String(error) },
             { status: 500 }
         );
     }
@@ -48,7 +37,6 @@ export async function PATCH(
     try {
         const { date } = await context.params;
         const userId = request.nextUrl.searchParams.get('userId');
-        const updates = await request.json();
 
         if (!userId) {
             return NextResponse.json(
@@ -57,13 +45,15 @@ export async function PATCH(
             );
         }
 
-        const plan = await updateDailyPlan(parseInt(userId), date, updates);
+        const body = await request.json();
+
+        const plan = await updateDailyPlan(userId, date, body);
 
         return NextResponse.json(plan);
     } catch (error) {
-        console.error('API error:', error);
+        console.error('API PATCH error:', error);
         return NextResponse.json(
-            { error: 'Failed to update plan' },
+            { error: 'Failed to update plan', details: String(error) },
             { status: 500 }
         );
     }

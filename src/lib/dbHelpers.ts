@@ -4,19 +4,25 @@
  */
 
 import { query } from './db';
+import { randomBytes } from 'crypto';
+
+// Generate a unique ID (similar to nanoid but simple)
+function generateId(): string {
+  return randomBytes(12).toString('hex').substring(0, 25);
+}
 
 // ============================================================================
 // USER OPERATIONS
 // ============================================================================
 
 export interface User {
-    id: number;
+    id: string;
     email: string;
     name: string | null;
-    password_hash: string | null;
+    password: string | null;
     timezone: string;
-    created_at: string;
-    updated_at: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function createUser(
@@ -25,24 +31,38 @@ export async function createUser(
     passwordHash: string,
     timezone: string = 'UTC'
 ): Promise<User> {
-    const { rows } = await query<User>(
-        `INSERT INTO users (email, name, password_hash, timezone) 
-     VALUES ($1, $2, $3, $4) 
-     RETURNING *`,
-        [email, name, passwordHash, timezone]
-    );
-    return rows[0];
+    try {
+        const userId = generateId();
+        const { rows } = await query<User>(
+            `INSERT INTO users (id, email, name, password, timezone) 
+         VALUES ($1, $2, $3, $4, $5) 
+         RETURNING *`,
+            [userId, email, name, passwordHash, timezone]
+        );
+        if (!rows[0]) {
+            throw new Error('No user returned from INSERT');
+        }
+        return rows[0];
+    } catch (error) {
+        console.error('Error creating user:', error);
+        throw error;
+    }
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-    const { rows } = await query<User>(
-        'SELECT * FROM users WHERE email = $1',
-        [email]
-    );
-    return rows[0] || null;
+    try {
+        const { rows } = await query<User>(
+            'SELECT * FROM users WHERE email = $1',
+            [email]
+        );
+        return rows[0] || null;
+    } catch (error) {
+        console.error('Error getting user by email:', error);
+        throw error;
+    }
 }
 
-export async function getUserById(id: number): Promise<User | null> {
+export async function getUserById(id: string): Promise<User | null> {
     const { rows } = await query<User>(
         'SELECT * FROM users WHERE id = $1',
         [id]
@@ -55,9 +75,9 @@ export async function getUserById(id: number): Promise<User | null> {
 // ============================================================================
 
 export interface DailyPlan {
-    id: number;
-    user_id: number;
-    plan_date: string;
+    id: string;
+    userId: string;
+    planDate: string;
     deep_work: any[];
     quick_wins: any[];
     make_it_happen: any | null;
@@ -65,24 +85,57 @@ export interface DailyPlan {
     little_joys: string[];
     reflection: string | null;
     focus_tomorrow: string | null;
-    created_at: string;
-    updated_at: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export async function getDailyPlan(
-    userId: number,
+    userId: string,
     planDate: string
 ): Promise<DailyPlan | null> {
-    const { rows } = await query<DailyPlan>(
+    const { rows } = await query<any>(
         `SELECT * FROM daily_plans 
-     WHERE user_id = $1 AND plan_date = $2`,
+     WHERE "userId" = $1 AND "planDate" = $2`,
         [userId, planDate]
     );
-    return rows[0] || null;
+    
+    if (!rows[0]) return null;
+    
+    const plan = rows[0];
+    const planId = plan.id;
+    
+    // Load all detail data
+    const [deepWorkRes, quickWinsRes, makeItHappenRes, rechargeZonesRes, littleJoysRes, reflectionRes, focusRes] = await Promise.all([
+        query(`SELECT * FROM deep_work_zones WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
+        query(`SELECT * FROM quick_wins WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
+        query(`SELECT * FROM make_it_happen WHERE "planId" = $1 LIMIT 1`, [planId]),
+        query(`SELECT * FROM recharge_zones WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
+        query(`SELECT * FROM little_joys WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
+        query(`SELECT * FROM reflections_today WHERE "planId" = $1 LIMIT 1`, [planId]),
+        query(`SELECT * FROM focus_tomorrow WHERE "planId" = $1 LIMIT 1`, [planId]),
+    ]);
+    
+    // Assemble the complete plan with all details
+    const completePlan: DailyPlan = {
+        id: plan.id,
+        userId: plan.userId,
+        planDate: plan.planDate,
+        deep_work: deepWorkRes.rows,
+        quick_wins: quickWinsRes.rows,
+        make_it_happen: makeItHappenRes.rows[0] || null,
+        recharge_zone: rechargeZonesRes.rows,
+        little_joys: littleJoysRes.rows.map(r => r.content),
+        reflection: reflectionRes.rows[0]?.content || null,
+        focus_tomorrow: focusRes.rows[0]?.content || null,
+        createdAt: plan.createdAt,
+        updatedAt: plan.updatedAt,
+    };
+    
+    return completePlan;
 }
 
 export async function getOrCreateDailyPlan(
-    userId: number,
+    userId: string,
     planDate: string
 ): Promise<DailyPlan> {
     // First try to get existing plan
@@ -90,71 +143,203 @@ export async function getOrCreateDailyPlan(
     if (plan) return plan;
 
     // Create new plan if it doesn't exist
+    const planId = generateId();
     const { rows } = await query<DailyPlan>(
-        `INSERT INTO daily_plans (user_id, plan_date) 
-     VALUES ($1, $2) 
-     ON CONFLICT (user_id, plan_date) DO UPDATE 
-     SET updated_at = CURRENT_TIMESTAMP
+        `INSERT INTO daily_plans (id, "userId", "planDate") 
+     VALUES ($1, $2, $3) 
+     ON CONFLICT ("userId", "planDate") DO UPDATE 
+     SET "updatedAt" = CURRENT_TIMESTAMP
      RETURNING *`,
-        [userId, planDate]
+        [planId, userId, planDate]
     );
     return rows[0];
+}
+
+// Helper functions for detail tables
+async function saveDeepWorkZones(planId: string, items: any[]): Promise<void> {
+    // Delete existing deep_work_zones for this plan
+    await query(`DELETE FROM deep_work_zones WHERE "planId" = $1`, [planId]);
+    
+    // Insert new deep_work_zones
+    for (const item of items) {
+        if (item.title) {
+            const zoneId = generateId();
+            await query(
+                `INSERT INTO deep_work_zones ("id", "planId", "title", "timeEstimate", "notes", "completed", "createdAt", "updatedAt")
+                 VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+                [zoneId, planId, item.title, item.timeEstimate || null, item.notes || null, item.completed || false]
+            );
+        }
+    }
+}
+
+async function saveQuickWins(planId: string, items: any[]): Promise<void> {
+    // Delete existing quick_wins for this plan
+    await query(`DELETE FROM quick_wins WHERE "planId" = $1`, [planId]);
+    
+    // Insert new quick_wins
+    for (const item of items) {
+        if (item.title) {
+            const winId = generateId();
+            await query(
+                `INSERT INTO quick_wins ("id", "planId", "title", "completed", "createdAt", "updatedAt")
+                 VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+                [winId, planId, item.title, item.completed || false]
+            );
+        }
+    }
+}
+
+async function saveMakeItHappen(planId: string, item: any): Promise<void> {
+    // Delete existing make_it_happen for this plan
+    await query(`DELETE FROM make_it_happen WHERE "planId" = $1`, [planId]);
+    
+    // Insert new make_it_happen if item exists
+    if (item && item.task) {
+        const taskId = generateId();
+        await query(
+            `INSERT INTO make_it_happen ("id", "planId", "task", "completed", "createdAt", "updatedAt")
+             VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+            [taskId, planId, item.task, item.completed || false]
+        );
+    }
+}
+
+async function saveRechargeZones(planId: string, items: any[]): Promise<void> {
+    // Delete existing recharge_zones for this plan
+    await query(`DELETE FROM recharge_zones WHERE "planId" = $1`, [planId]);
+    
+    // Insert new recharge_zones
+    for (const item of items) {
+        if (item.activityId || item.customActivity) {
+            const zoneId = generateId();
+            await query(
+                `INSERT INTO recharge_zones ("id", "planId", "activityId", "customActivity", "completed", "createdAt", "updatedAt")
+                 VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+                [zoneId, planId, item.activityId || null, item.customActivity || null, item.completed || false]
+            );
+        }
+    }
+}
+
+async function saveLittleJoys(planId: string, items: string[]): Promise<void> {
+    // Delete existing little_joys for this plan
+    await query(`DELETE FROM little_joys WHERE "planId" = $1`, [planId]);
+    
+    // Insert new little_joys
+    for (const content of items) {
+        if (content && content.trim()) {
+            const joyId = generateId();
+            await query(
+                `INSERT INTO little_joys ("id", "planId", "content", "createdAt")
+                 VALUES ($1, $2, $3, CURRENT_TIMESTAMP)`,
+                [joyId, planId, content.trim()]
+            );
+        }
+    }
+}
+
+async function saveReflectionToday(planId: string, content: string | null): Promise<void> {
+    // Delete existing reflection for this plan
+    await query(`DELETE FROM reflections_today WHERE "planId" = $1`, [planId]);
+    
+    // Insert new reflection if content exists
+    if (content && content.trim()) {
+        const reflectionId = generateId();
+        await query(
+            `INSERT INTO reflections_today ("id", "planId", "content", "createdAt", "updatedAt")
+             VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+            [reflectionId, planId, content.trim()]
+        );
+    }
+}
+
+async function saveFocusTomorrow(planId: string, content: string | null): Promise<void> {
+    // Delete existing focus_tomorrow for this plan
+    await query(`DELETE FROM focus_tomorrow WHERE "planId" = $1`, [planId]);
+    
+    // Insert new focus_tomorrow if content exists
+    if (content && content.trim()) {
+        const focusId = generateId();
+        await query(
+            `INSERT INTO focus_tomorrow ("id", "planId", "content", "createdAt", "updatedAt")
+             VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+            [focusId, planId, content.trim()]
+        );
+    }
 }
 
 export async function updateDailyPlan(
-    userId: number,
+    userId: string,
     planDate: string,
-    updates: Partial<DailyPlan>
+    planData: {
+        deep_work?: any[];
+        quick_wins?: any[];
+        make_it_happen?: any;
+        recharge_zone?: any[];
+        little_joys?: string[];
+        reflection?: string;
+        focus_tomorrow?: string;
+    }
 ): Promise<DailyPlan> {
-    const allowedFields = [
-        'deep_work',
-        'quick_wins',
-        'make_it_happen',
-        'recharge_zone',
-        'little_joys',
-        'reflection',
-        'focus_tomorrow',
-    ];
+    // Get or create the daily plan first
+    const plan = await getOrCreateDailyPlan(userId, planDate);
+    const planId = plan.id;
 
-    const setClause = Object.keys(updates)
-        .filter((key) => allowedFields.includes(key))
-        .map((key, index) => `${key} = $${index + 3}`)
-        .join(', ');
-
-    if (!setClause) {
-        return (await getDailyPlan(userId, planDate))!;
+    // Save all the nested detail data
+    if (planData.deep_work) {
+        await saveDeepWorkZones(planId, planData.deep_work);
+    }
+    if (planData.quick_wins) {
+        await saveQuickWins(planId, planData.quick_wins);
+    }
+    if (planData.make_it_happen) {
+        await saveMakeItHappen(planId, planData.make_it_happen);
+    }
+    if (planData.recharge_zone) {
+        await saveRechargeZones(planId, planData.recharge_zone);
+    }
+    if (planData.little_joys) {
+        await saveLittleJoys(planId, planData.little_joys);
+    }
+    if (planData.reflection !== undefined) {
+        await saveReflectionToday(planId, planData.reflection);
+    }
+    if (planData.focus_tomorrow !== undefined) {
+        await saveFocusTomorrow(planId, planData.focus_tomorrow);
     }
 
-    const values = [
-        userId,
-        planDate,
-        ...Object.keys(updates)
-            .filter((key) => allowedFields.includes(key))
-            .map((key) => updates[key as keyof typeof updates]),
-    ];
-
-    const { rows } = await query<DailyPlan>(
-        `UPDATE daily_plans 
-     SET ${setClause}, updated_at = CURRENT_TIMESTAMP
-     WHERE user_id = $1 AND plan_date = $2
-     RETURNING *`,
-        values
+    // Update the daily_plans record's timestamp
+    await query(
+        `UPDATE daily_plans SET "updatedAt" = CURRENT_TIMESTAMP WHERE id = $1`,
+        [planId]
     );
-    return rows[0];
+
+    // Return the updated plan
+    return (await getDailyPlan(userId, planDate))!;
 }
 
 export async function getUserPlans(
-    userId: number,
+    userId: string,
     limit: number = 30
 ): Promise<DailyPlan[]> {
-    const { rows } = await query<DailyPlan>(
+    const { rows } = await query<any>(
         `SELECT * FROM daily_plans 
-     WHERE user_id = $1 
-     ORDER BY plan_date DESC 
+     WHERE "userId" = $1 
+     ORDER BY "planDate" DESC 
      LIMIT $2`,
         [userId, limit]
     );
-    return rows;
+    
+    // Load detail data for each plan
+    const plans: DailyPlan[] = [];
+    for (const plan of rows) {
+        const completePlan = await getDailyPlan(userId, plan.planDate);
+        if (completePlan) {
+            plans.push(completePlan);
+        }
+    }
+    return plans;
 }
 
 // ============================================================================

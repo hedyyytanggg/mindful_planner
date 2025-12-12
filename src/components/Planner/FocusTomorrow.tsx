@@ -1,22 +1,26 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { Card, Textarea, Button } from '@/components/Common';
 
 interface FocusTomorrowProps {
     content: string | null;
-    onSave: (content: string) => void;
+    onSave: (content: string | null) => void;
 }
 
 export function FocusTomorrow({ content, onSave }: FocusTomorrowProps) {
     const [isEditing, setIsEditing] = useState(!content);
     const [text, setText] = useState(content || '');
 
+    // Sync internal state when content prop changes
+    useEffect(() => {
+        setText(content || '');
+        setIsEditing(!content);
+    }, [content]);
+
     const handleSave = () => {
-        if (text.trim()) {
-            onSave(text);
-            setIsEditing(false);
-        }
+        onSave(text.trim() || null);
+        setIsEditing(false);
     };
 
     return (
