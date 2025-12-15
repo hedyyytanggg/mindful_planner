@@ -14,76 +14,130 @@
 const { Pool } = require('pg');
 require('dotenv').config({ path: '.env.local' });
 
+const dropSchema = `
+  -- Drop all existing tables (in reverse order of dependencies)
+  DROP TABLE IF EXISTS reflections_today CASCADE;
+  DROP TABLE IF EXISTS focus_tomorrow CASCADE;
+  DROP TABLE IF EXISTS little_joys CASCADE;
+  DROP TABLE IF EXISTS recharge_zones CASCADE;
+  DROP TABLE IF EXISTS make_it_happen CASCADE;
+  DROP TABLE IF EXISTS quick_wins CASCADE;
+  DROP TABLE IF EXISTS deep_work_zones CASCADE;
+  DROP TABLE IF EXISTS core_memories CASCADE;
+  DROP TABLE IF EXISTS daily_plans CASCADE;
+  DROP TABLE IF EXISTS users CASCADE;
+`;
+
 const initSchema = `
   -- Users table
   CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     name VARCHAR(255),
-    password_hash VARCHAR(255),
+    password VARCHAR(255),
     timezone VARCHAR(50) DEFAULT 'UTC',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
   -- Daily plans table
   CREATE TABLE IF NOT EXISTS daily_plans (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    plan_date DATE NOT NULL,
-    deep_work JSONB DEFAULT '[]',
-    quick_wins JSONB DEFAULT '[]',
-    make_it_happen JSONB DEFAULT 'null',
-    recharge_zone JSONB DEFAULT 'null',
-    little_joys JSONB DEFAULT '[]',
-    reflection TEXT,
-    focus_tomorrow TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, plan_date)
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    userId VARCHAR(25) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    planDate DATE NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(userId, planDate)
   );
 
   -- Deep work zones table (individual tasks)
   CREATE TABLE IF NOT EXISTS deep_work_zones (
-    id SERIAL PRIMARY KEY,
-    daily_plan_id INTEGER NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    planId VARCHAR(25) NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
-    time_estimate INTEGER,
+    timeEstimate INTEGER,
     notes TEXT,
     completed BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
   -- Quick wins table
   CREATE TABLE IF NOT EXISTS quick_wins (
-    id SERIAL PRIMARY KEY,
-    daily_plan_id INTEGER NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    planId VARCHAR(25) NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     completed BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
-  -- App settings table
-  CREATE TABLE IF NOT EXISTS app_settings (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
-    theme VARCHAR(50) DEFAULT 'light',
-    notifications_enabled BOOLEAN DEFAULT TRUE,
-    email_digest_enabled BOOLEAN DEFAULT TRUE,
-    daily_reminder_enabled BOOLEAN DEFAULT TRUE,
-    daily_reminder_time TIME DEFAULT '09:00:00',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  -- Make it happen table
+  CREATE TABLE IF NOT EXISTS make_it_happen (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    planId VARCHAR(25) NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
+    task VARCHAR(255) NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Recharge zones table
+  CREATE TABLE IF NOT EXISTS recharge_zones (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    planId VARCHAR(25) NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
+    activityId VARCHAR(255),
+    customActivity VARCHAR(255),
+    completed BOOLEAN DEFAULT FALSE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Little joys table
+  CREATE TABLE IF NOT EXISTS little_joys (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    planId VARCHAR(25) NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
+    joy TEXT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Reflections today table
+  CREATE TABLE IF NOT EXISTS reflections_today (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    planId VARCHAR(25) NOT NULL UNIQUE REFERENCES daily_plans(id) ON DELETE CASCADE,
+    content TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Focus tomorrow table
+  CREATE TABLE IF NOT EXISTS focus_tomorrow (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    planId VARCHAR(25) NOT NULL UNIQUE REFERENCES daily_plans(id) ON DELETE CASCADE,
+    content TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Core memories table
+  CREATE TABLE IF NOT EXISTS core_memories (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    userId VARCHAR(25) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    memoryDate DATE NOT NULL,
+    tags JSONB DEFAULT '[]',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
   -- Create indexes for faster queries
-  CREATE INDEX IF NOT EXISTS idx_daily_plans_user_id ON daily_plans(user_id);
-  CREATE INDEX IF NOT EXISTS idx_daily_plans_date ON daily_plans(plan_date);
-  CREATE INDEX IF NOT EXISTS idx_deep_work_plan_id ON deep_work_zones(daily_plan_id);
-  CREATE INDEX IF NOT EXISTS idx_quick_wins_plan_id ON quick_wins(daily_plan_id);
-  CREATE INDEX IF NOT EXISTS idx_app_settings_user_id ON app_settings(user_id);
+  CREATE INDEX IF NOT EXISTS idx_daily_plans_userId ON daily_plans(userId);
+  CREATE INDEX IF NOT EXISTS idx_daily_plans_planDate ON daily_plans(planDate);
+  CREATE INDEX IF NOT EXISTS idx_deep_work_zones_planId ON deep_work_zones(planId);
+  CREATE INDEX IF NOT EXISTS idx_quick_wins_planId ON quick_wins(planId);
+  CREATE INDEX IF NOT EXISTS idx_core_memories_userId ON core_memories(userId);
+  CREATE INDEX IF NOT EXISTS idx_core_memories_memoryDate ON core_memories(memoryDate);
 `;
 
 async function initDb() {
@@ -99,7 +153,15 @@ async function initDb() {
         console.log(`📍 Database URL: ${process.env.DATABASE_URL}`);
 
         const client = await pool.connect();
+
+        // Drop existing schema first
+        console.log('🗑️  Dropping existing tables...');
+        await client.query(dropSchema);
+
+        // Create new schema
+        console.log('🔨 Creating new schema...');
         await client.query(initSchema);
+
         client.release();
 
         console.log('✅ Database schema created successfully!');
@@ -108,7 +170,13 @@ async function initDb() {
         console.log('  - daily_plans');
         console.log('  - deep_work_zones');
         console.log('  - quick_wins');
-        console.log('  - app_settings');
+        console.log('  - make_it_happen');
+        console.log('  - recharge_zones');
+        console.log('  - little_joys');
+        console.log('  - reflections_today');
+        console.log('  - focus_tomorrow');
+        console.log('  - core_memories');
+        console.log('✨ All indexes created successfully!');
         console.log('');
         console.log('🎉 Ready to use! Start your app with: npm run dev');
     } catch (error) {

@@ -8,7 +8,7 @@ import { randomBytes } from 'crypto';
 
 // Generate a unique ID (similar to nanoid but simple)
 function generateId(): string {
-  return randomBytes(12).toString('hex').substring(0, 25);
+    return randomBytes(12).toString('hex').substring(0, 25);
 }
 
 // ============================================================================
@@ -95,26 +95,26 @@ export async function getDailyPlan(
 ): Promise<DailyPlan | null> {
     const { rows } = await query<any>(
         `SELECT * FROM daily_plans 
-     WHERE "userId" = $1 AND "planDate" = $2`,
+         WHERE userId = $1 AND planDate = $2`,
         [userId, planDate]
     );
-    
+
     if (!rows[0]) return null;
-    
+
     const plan = rows[0];
     const planId = plan.id;
-    
+
     // Load all detail data
     const [deepWorkRes, quickWinsRes, makeItHappenRes, rechargeZonesRes, littleJoysRes, reflectionRes, focusRes] = await Promise.all([
-        query(`SELECT * FROM deep_work_zones WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
-        query(`SELECT * FROM quick_wins WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
-        query(`SELECT * FROM make_it_happen WHERE "planId" = $1 LIMIT 1`, [planId]),
-        query(`SELECT * FROM recharge_zones WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
-        query(`SELECT * FROM little_joys WHERE "planId" = $1 ORDER BY "createdAt"`, [planId]),
-        query(`SELECT * FROM reflections_today WHERE "planId" = $1 LIMIT 1`, [planId]),
-        query(`SELECT * FROM focus_tomorrow WHERE "planId" = $1 LIMIT 1`, [planId]),
+        query(`SELECT * FROM deep_work_zones WHERE planid = $1 ORDER BY createdat`, [planId]),
+        query(`SELECT * FROM quick_wins WHERE planid = $1 ORDER BY createdat`, [planId]),
+        query(`SELECT * FROM make_it_happen WHERE planid = $1 LIMIT 1`, [planId]),
+        query(`SELECT * FROM recharge_zones WHERE planid = $1 ORDER BY createdat`, [planId]),
+        query(`SELECT * FROM little_joys WHERE planid = $1 ORDER BY createdat`, [planId]),
+        query(`SELECT * FROM reflections_today WHERE planid = $1 LIMIT 1`, [planId]),
+        query(`SELECT * FROM focus_tomorrow WHERE planid = $1 LIMIT 1`, [planId]),
     ]);
-    
+
     // Assemble the complete plan with all details
     const completePlan: DailyPlan = {
         id: plan.id,
@@ -130,7 +130,7 @@ export async function getDailyPlan(
         createdAt: plan.createdAt,
         updatedAt: plan.updatedAt,
     };
-    
+
     return completePlan;
 }
 
@@ -145,11 +145,11 @@ export async function getOrCreateDailyPlan(
     // Create new plan if it doesn't exist
     const planId = generateId();
     const { rows } = await query<DailyPlan>(
-        `INSERT INTO daily_plans (id, "userId", "planDate") 
-     VALUES ($1, $2, $3) 
-     ON CONFLICT ("userId", "planDate") DO UPDATE 
-     SET "updatedAt" = CURRENT_TIMESTAMP
-     RETURNING *`,
+        `INSERT INTO daily_plans (id, userId, planDate, createdAt, updatedAt) 
+         VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) 
+         ON CONFLICT (userId, planDate) DO UPDATE 
+         SET updatedAt = CURRENT_TIMESTAMP
+         RETURNING *`,
         [planId, userId, planDate]
     );
     return rows[0];
@@ -158,14 +158,14 @@ export async function getOrCreateDailyPlan(
 // Helper functions for detail tables
 async function saveDeepWorkZones(planId: string, items: any[]): Promise<void> {
     // Delete existing deep_work_zones for this plan
-    await query(`DELETE FROM deep_work_zones WHERE "planId" = $1`, [planId]);
-    
+    await query(`DELETE FROM deep_work_zones WHERE planid = $1`, [planId]);
+
     // Insert new deep_work_zones
     for (const item of items) {
         if (item.title) {
             const zoneId = generateId();
             await query(
-                `INSERT INTO deep_work_zones ("id", "planId", "title", "timeEstimate", "notes", "completed", "createdAt", "updatedAt")
+                `INSERT INTO deep_work_zones (id, planid, title, timeestimate, notes, completed, createdat, updatedat)
                  VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
                 [zoneId, planId, item.title, item.timeEstimate || null, item.notes || null, item.completed || false]
             );
@@ -175,14 +175,14 @@ async function saveDeepWorkZones(planId: string, items: any[]): Promise<void> {
 
 async function saveQuickWins(planId: string, items: any[]): Promise<void> {
     // Delete existing quick_wins for this plan
-    await query(`DELETE FROM quick_wins WHERE "planId" = $1`, [planId]);
-    
+    await query(`DELETE FROM quick_wins WHERE planid = $1`, [planId]);
+
     // Insert new quick_wins
     for (const item of items) {
         if (item.title) {
             const winId = generateId();
             await query(
-                `INSERT INTO quick_wins ("id", "planId", "title", "completed", "createdAt", "updatedAt")
+                `INSERT INTO quick_wins (id, planid, title, completed, createdat, updatedat)
                  VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
                 [winId, planId, item.title, item.completed || false]
             );
@@ -192,13 +192,13 @@ async function saveQuickWins(planId: string, items: any[]): Promise<void> {
 
 async function saveMakeItHappen(planId: string, item: any): Promise<void> {
     // Delete existing make_it_happen for this plan
-    await query(`DELETE FROM make_it_happen WHERE "planId" = $1`, [planId]);
-    
+    await query(`DELETE FROM make_it_happen WHERE planid = $1`, [planId]);
+
     // Insert new make_it_happen if item exists
     if (item && item.task) {
         const taskId = generateId();
         await query(
-            `INSERT INTO make_it_happen ("id", "planId", "task", "completed", "createdAt", "updatedAt")
+            `INSERT INTO make_it_happen (id, planid, task, completed, createdat, updatedat)
              VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
             [taskId, planId, item.task, item.completed || false]
         );
@@ -207,14 +207,14 @@ async function saveMakeItHappen(planId: string, item: any): Promise<void> {
 
 async function saveRechargeZones(planId: string, items: any[]): Promise<void> {
     // Delete existing recharge_zones for this plan
-    await query(`DELETE FROM recharge_zones WHERE "planId" = $1`, [planId]);
-    
+    await query(`DELETE FROM recharge_zones WHERE planid = $1`, [planId]);
+
     // Insert new recharge_zones
     for (const item of items) {
         if (item.activityId || item.customActivity) {
             const zoneId = generateId();
             await query(
-                `INSERT INTO recharge_zones ("id", "planId", "activityId", "customActivity", "completed", "createdAt", "updatedAt")
+                `INSERT INTO recharge_zones (id, planid, activityid, customactivity, completed, createdat, updatedat)
                  VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
                 [zoneId, planId, item.activityId || null, item.customActivity || null, item.completed || false]
             );
@@ -224,14 +224,14 @@ async function saveRechargeZones(planId: string, items: any[]): Promise<void> {
 
 async function saveLittleJoys(planId: string, items: string[]): Promise<void> {
     // Delete existing little_joys for this plan
-    await query(`DELETE FROM little_joys WHERE "planId" = $1`, [planId]);
-    
+    await query(`DELETE FROM little_joys WHERE planid = $1`, [planId]);
+
     // Insert new little_joys
     for (const content of items) {
         if (content && content.trim()) {
             const joyId = generateId();
             await query(
-                `INSERT INTO little_joys ("id", "planId", "content", "createdAt")
+                `INSERT INTO little_joys (id, planid, joy, createdat)
                  VALUES ($1, $2, $3, CURRENT_TIMESTAMP)`,
                 [joyId, planId, content.trim()]
             );
@@ -241,13 +241,13 @@ async function saveLittleJoys(planId: string, items: string[]): Promise<void> {
 
 async function saveReflectionToday(planId: string, content: string | null): Promise<void> {
     // Delete existing reflection for this plan
-    await query(`DELETE FROM reflections_today WHERE "planId" = $1`, [planId]);
-    
+    await query(`DELETE FROM reflections_today WHERE planid = $1`, [planId]);
+
     // Insert new reflection if content exists
     if (content && content.trim()) {
         const reflectionId = generateId();
         await query(
-            `INSERT INTO reflections_today ("id", "planId", "content", "createdAt", "updatedAt")
+            `INSERT INTO reflections_today (id, planid, content, createdat, updatedat)
              VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
             [reflectionId, planId, content.trim()]
         );
@@ -256,16 +256,163 @@ async function saveReflectionToday(planId: string, content: string | null): Prom
 
 async function saveFocusTomorrow(planId: string, content: string | null): Promise<void> {
     // Delete existing focus_tomorrow for this plan
-    await query(`DELETE FROM focus_tomorrow WHERE "planId" = $1`, [planId]);
-    
+    await query(`DELETE FROM focus_tomorrow WHERE planid = $1`, [planId]);
+
     // Insert new focus_tomorrow if content exists
     if (content && content.trim()) {
         const focusId = generateId();
         await query(
-            `INSERT INTO focus_tomorrow ("id", "planId", "content", "createdAt", "updatedAt")
+            `INSERT INTO focus_tomorrow (id, planid, content, createdat, updatedat)
              VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
             [focusId, planId, content.trim()]
         );
+    }
+}
+
+// ============================================================================
+// CORE MEMORIES OPERATIONS
+// ============================================================================
+
+export interface CoreMemory {
+    id: string;
+    userId: string;
+    title: string;
+    description: string;
+    memoryDate: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export async function createCoreMemory(
+    userId: string,
+    title: string,
+    description: string,
+    memoryDate: string
+): Promise<CoreMemory> {
+    try {
+        const memoryId = generateId();
+        // Convert userId to number if possible, otherwise keep as string
+        const userIdValue = isNaN(Number(userId)) ? userId : Number(userId);
+        const { rows } = await query<any>(
+            `INSERT INTO core_memories (id, userid, title, description, memorydate, createdat, updatedat)
+             VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+             RETURNING *`,
+            [memoryId, userIdValue, title, description, memoryDate]
+        );
+        if (!rows[0]) {
+            throw new Error('No memory returned from INSERT');
+        }
+        // Transform snake_case to camelCase
+        return transformMemory(rows[0]);
+    } catch (error) {
+        console.error('Error creating core memory:', error);
+        throw error;
+    }
+}
+
+function transformMemory(dbMemory: any): CoreMemory {
+    return {
+        id: dbMemory.id,
+        userId: String(dbMemory.userid || dbMemory.userId || dbMemory.user_id || ''),
+        title: dbMemory.title,
+        description: dbMemory.description,
+        memoryDate: dbMemory.memorydate || dbMemory.memoryDate || dbMemory.memory_date,
+        createdAt: dbMemory.createdat || dbMemory.createdAt || dbMemory.created_at,
+        updatedAt: dbMemory.updatedat || dbMemory.updatedAt || dbMemory.updated_at,
+    };
+}
+
+export async function getCoreMemoriesByUser(userId: string): Promise<CoreMemory[]> {
+    try {
+        // Convert userId to number if possible
+        const userIdValue = isNaN(Number(userId)) ? userId : Number(userId);
+        const { rows } = await query<any>(
+            `SELECT * FROM core_memories WHERE userid = $1 ORDER BY memorydate DESC, createdat DESC`,
+            [userIdValue]
+        );
+        return rows.map(transformMemory);
+    } catch (error) {
+        console.error('Error fetching core memories:', error);
+        throw error;
+    }
+}
+
+export async function getCoreMemoriesByUserAndDate(userId: string, memoryDate: string): Promise<CoreMemory[]> {
+    try {
+        // Convert userId to number if possible
+        const userIdValue = isNaN(Number(userId)) ? userId : Number(userId);
+        const { rows } = await query<any>(
+            `SELECT * FROM core_memories WHERE userid = $1 AND memorydate = $2 ORDER BY createdat DESC`,
+            [userIdValue, memoryDate]
+        );
+        return rows.map(transformMemory);
+    } catch (error) {
+        console.error('Error fetching core memories by date:', error);
+        throw error;
+    }
+}
+
+export async function getCoreMemoryById(id: string): Promise<CoreMemory | null> {
+    try {
+        const { rows } = await query<any>(
+            `SELECT * FROM core_memories WHERE id = $1`,
+            [id]
+        );
+        return rows[0] ? transformMemory(rows[0]) : null;
+    } catch (error) {
+        console.error('Error fetching core memory:', error);
+        throw error;
+    }
+}
+
+export async function updateCoreMemory(
+    id: string,
+    updates: Partial<Omit<CoreMemory, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>
+): Promise<CoreMemory> {
+    try {
+        const allowedFields = ['title', 'description', 'memoryDate'];
+
+        const setClause = Object.keys(updates)
+            .filter((key) => allowedFields.includes(key))
+            .map((key, index) => `${key} = $${index + 2}`)
+            .join(', ');
+
+        if (!setClause) {
+            const existing = await getCoreMemoryById(id);
+            if (!existing) throw new Error('Core memory not found');
+            return existing;
+        }
+
+        const values = [
+            id,
+            ...Object.keys(updates)
+                .filter((key) => allowedFields.includes(key))
+                .map((key) => updates[key as keyof typeof updates]),
+        ];
+
+        const { rows } = await query<any>(
+            `UPDATE core_memories 
+             SET ${setClause}, updatedAt = CURRENT_TIMESTAMP
+             WHERE id = $1
+             RETURNING *`,
+            values
+        );
+        if (!rows[0]) {
+            throw new Error('Core memory not found');
+        }
+        return transformMemory(rows[0]);
+    } catch (error: unknown) {
+        console.error('Error updating core memory:', error);
+        throw error;
+    }
+}
+
+export async function deleteCoreMemory(id: string): Promise<void> {
+    try {
+        await query(`DELETE FROM core_memories WHERE id = $1`, [id]);
+    } catch (error) {
+        console.error('Error deleting core memory:', error);
+        throw error;
     }
 }
 
@@ -311,7 +458,7 @@ export async function updateDailyPlan(
 
     // Update the daily_plans record's timestamp
     await query(
-        `UPDATE daily_plans SET "updatedAt" = CURRENT_TIMESTAMP WHERE id = $1`,
+        `UPDATE daily_plans SET updatedAt = CURRENT_TIMESTAMP WHERE id = $1`,
         [planId]
     );
 
@@ -330,7 +477,7 @@ export async function getUserPlans(
      LIMIT $2`,
         [userId, limit]
     );
-    
+
     // Load detail data for each plan
     const plans: DailyPlan[] = [];
     for (const plan of rows) {

@@ -10,6 +10,7 @@ import { RechargeZone } from '@/components/Planner/RechargeZone';
 import { LittleJoys } from '@/components/Planner/LittleJoys';
 import { ReflectionToday } from '@/components/Planner/ReflectionToday';
 import { FocusTomorrow } from '@/components/Planner/FocusTomorrow';
+import { CoreMemories } from '@/components/Planner/CoreMemories';
 import { Button } from '@/components/Common';
 
 interface DeepWorkItem {
@@ -37,6 +38,15 @@ interface RechargeItem {
     activityId: string | null;
     customActivity: string | null;
     completed: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+interface CoreMemory {
+    id: string;
+    title: string;
+    description: string;
+    memoryDate: string;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -81,6 +91,9 @@ export default function PlannerPage() {
 
     // Focus for Tomorrow State
     const [focusTomorrow, setFocusTomorrow] = useState<string | null>(null);
+
+    // Core Memories State
+    const [coreMemories, setCoreMemories] = useState<CoreMemory[]>([]);
 
     // Initialize date and load data from database or localStorage
     useEffect(() => {
@@ -130,7 +143,7 @@ export default function PlannerPage() {
             // Also save to localStorage as backup
             savePlanToLocalStorage(date);
             console.log('✅ Plan saved to database');
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error saving to database:', error);
             setSaveError('Failed to save to database, but saved locally');
             // Fallback to localStorage
@@ -181,7 +194,7 @@ export default function PlannerPage() {
             setFocusTomorrow(dbPlan.focus_tomorrow || null);
 
             setSaveError(null);
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error loading from database:', error);
             // Fall back to localStorage if database fails
             loadPlanFromLocalStorage(date);
@@ -201,7 +214,7 @@ export default function PlannerPage() {
                 setLittleJoys(plan.littleJoys || []);
                 setReflection(plan.reflection || null);
                 setFocusTomorrow(plan.focusTomorrow || null);
-            } catch (error) {
+            } catch (error: unknown) {
                 console.error('Error parsing localStorage:', error);
             }
         } else {
@@ -254,6 +267,11 @@ export default function PlannerPage() {
 
         return () => clearTimeout(timer);
     }, [deepWork, quickWins, makeItHappen, recharge, littleJoys, reflection, focusTomorrow, currentDate, userId, isLoading]);
+
+    // Load core memories whenever currentDate changes
+    useEffect(() => {
+        loadCoreMemories();
+    }, [currentDate]);
 
     // Deep Work Handlers
     const handleAddDeepWork = (item: { title: string; timeEstimate?: number; notes?: string; completed: boolean }) => {
@@ -336,6 +354,72 @@ export default function PlannerPage() {
         setLittleJoys(littleJoys.filter((_, i) => i !== index));
     };
 
+    // Load Core Memories
+    const loadCoreMemories = async () => {
+        if (!userId || !currentDate) return;
+
+        try {
+            const response = await fetch(`/api/memories?userId=${userId}&memoryDate=${currentDate}`);
+            if (!response.ok) {
+                throw new Error('Failed to load memories');
+            }
+            const data = await response.json();
+            setCoreMemories(data.memories || []);
+        } catch (error: unknown) {
+            console.error('Error loading core memories:', error);
+        }
+    };
+
+    // Add Core Memory
+    const handleAddMemory = async (memory: Omit<CoreMemory, 'id' | 'createdAt' | 'updatedAt'>) => {
+        if (!userId) return;
+
+        try {
+            const response = await fetch('/api/memories', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...memory,
+                    userId,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save memory');
+            }
+
+            const data = await response.json();
+            setCoreMemories([data.memory, ...coreMemories]);
+            console.log('✅ Memory saved');
+        } catch (error: unknown) {
+            console.error('Error saving memory:', error);
+            setSaveError('Failed to save memory');
+        }
+    };
+
+    // Delete Core Memory
+    const handleDeleteMemory = async (id: string) => {
+        if (!userId) return;
+
+        try {
+            const response = await fetch(`/api/memories/${id}?userId=${userId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete memory');
+            }
+
+            setCoreMemories(coreMemories.filter(m => m.id !== id));
+            console.log('✅ Memory deleted');
+        } catch (error: unknown) {
+            console.error('Error deleting memory:', error);
+            setSaveError('Failed to delete memory');
+        }
+    };
+
     // Export Plan
     const handleExport = () => {
         const plan = {
@@ -343,9 +427,9 @@ export default function PlannerPage() {
             deepWork: deepWork.map(d => ({ title: d.title, time: d.timeEstimate, notes: d.notes, done: d.completed })),
             quickWins: quickWins.map(q => ({ title: q.title, done: q.completed })),
             makeItHappen: makeItHappen?.task,
-            recharge: recharge.map(r => ({ 
-                activity: r.activityId || r.customActivity, 
-                done: r.completed 
+            recharge: recharge.map(r => ({
+                activity: r.activityId || r.customActivity,
+                done: r.completed
             })),
             littleJoys,
             reflection,
@@ -508,14 +592,24 @@ export default function PlannerPage() {
                         onAdd={handleAddJoy}
                         onDelete={handleDeleteJoy}
                     />
+                </div>
+
+                {/* Core Memories Section */}
+                <div className="mt-8">
+                    <CoreMemories
+                        memories={coreMemories}
+                        currentDate={currentDate}
+                        onAdd={handleAddMemory}
+                        onDelete={handleDeleteMemory}
+                    />
+                </div>
+
+                {/* Reflection & Focus */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                     <ReflectionToday
                         content={reflection}
                         onSave={setReflection}
                     />
-                </div>
-
-                {/* Tomorrow's Focus */}
-                <div className="mt-6">
                     <FocusTomorrow
                         content={focusTomorrow}
                         onSave={setFocusTomorrow}

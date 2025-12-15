@@ -75,11 +75,10 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete }: Recharge
                             onClick={() => handleActivityClick(activity.id)}
                             aria-label={`Mark ${activity.id} as ${isCompleted ? 'incomplete' : 'complete'}`}
                             aria-pressed={isCompleted}
-                            className={`p-3 text-left rounded-lg transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                                isCompleted
+                            className={`p-3 text-left rounded-lg transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-blue-500 ${isCompleted
                                     ? 'bg-green-100 ring-2 ring-green-400 scale-105'
                                     : 'bg-blue-50 hover:bg-blue-100 active:scale-95'
-                            }`}
+                                }`}
                         >
                             <div
                                 className={`text-2xl mb-1 transition-transform ${isCompleted ? 'scale-110' : ''}`}
@@ -104,11 +103,10 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete }: Recharge
                 .map(item => (
                     <div
                         key={item.id}
-                        className={`p-3 mb-2 rounded-lg flex items-center justify-between ${
-                            item.completed
+                        className={`p-3 mb-2 rounded-lg flex items-center justify-between ${item.completed
                                 ? 'bg-green-100 text-green-700'
                                 : 'bg-gray-100 text-gray-700'
-                        }`}
+                            }`}
                     >
                         <div className="flex items-center gap-2">
                             <input
