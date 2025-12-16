@@ -23,6 +23,7 @@ interface ProjectUpdatesProps {
     onAddProject: (name: string, description: string) => void;
     onAddUpdate: (projectId: string, content: string) => void;
     onDeleteUpdate: (id: string) => void;
+    disabled?: boolean;
 }
 
 export function ProjectUpdates({
@@ -32,6 +33,7 @@ export function ProjectUpdates({
     onAddProject,
     onAddUpdate,
     onDeleteUpdate,
+    disabled = false,
 }: ProjectUpdatesProps) {
     const [showProjectForm, setShowProjectForm] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
@@ -64,12 +66,14 @@ export function ProjectUpdates({
                         <h2 className="text-xl font-bold text-gray-900">📚 Activity Log</h2>
                         <p className="text-sm text-gray-600">Track projects, hobbies, and events ({updates.length} today)</p>
                     </div>
-                    <button
-                        onClick={() => setShowProjectForm(!showProjectForm)}
-                        className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                    >
-                        {showProjectForm ? 'Cancel' : '+ New Activity'}
-                    </button>
+                    {!disabled && (
+                        <button
+                            onClick={() => setShowProjectForm(!showProjectForm)}
+                            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                        >
+                            {showProjectForm ? 'Cancel' : '+ New Activity'}
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -113,13 +117,15 @@ export function ProjectUpdates({
                                     </h4>
                                     <p className="text-gray-700 text-sm whitespace-pre-wrap">{update.content}</p>
                                 </div>
-                                <button
-                                    onClick={() => onDeleteUpdate(update.id)}
-                                    className="text-red-500 hover:text-red-700 font-bold flex-shrink-0 text-lg"
-                                    aria-label="Delete update"
-                                >
-                                    ✕
-                                </button>
+                                {!disabled && (
+                                    <button
+                                        onClick={() => onDeleteUpdate(update.id)}
+                                        className="text-red-500 hover:text-red-700 font-bold flex-shrink-0 text-lg"
+                                        aria-label="Delete update"
+                                    >
+                                        ✕
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))
@@ -127,46 +133,48 @@ export function ProjectUpdates({
             </div>
 
             {/* Add Update Form */}
-            <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900">Log Update</h3>
-                {projects.length === 0 ? (
-                    <p className="text-sm text-gray-600">Create an activity first to start logging updates</p>
-                ) : (
-                    <>
-                        <select
-                            value={selectedProjectId}
-                            onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedProjectId(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        >
-                            <option value="">Select an activity...</option>
-                            {projects.map((project) => (
-                                <option key={project.id} value={project.id}>
-                                    {project.name}
-                                </option>
-                            ))}
-                        </select>
+            {!disabled && (
+                <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+                    <h3 className="font-semibold text-gray-900">Log Update</h3>
+                    {projects.length === 0 ? (
+                        <p className="text-sm text-gray-600">Create an activity first to start logging updates</p>
+                    ) : (
+                        <>
+                            <select
+                                value={selectedProjectId}
+                                onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedProjectId(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            >
+                                <option value="">Select an activity...</option>
+                                {projects.map((project) => (
+                                    <option key={project.id} value={project.id}>
+                                        {project.name}
+                                    </option>
+                                ))}
+                            </select>
 
-                        <Textarea
-                            placeholder="What did you work on? (e.g., Practiced chords for 30 mins, Installed deck posts)"
-                            value={updateContent}
-                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setUpdateContent(e.target.value)}
-                            rows={3}
-                            fullWidth
-                            charLimit={500}
-                        />
+                            <Textarea
+                                placeholder="What did you work on? (e.g., Practiced chords for 30 mins, Installed deck posts)"
+                                value={updateContent}
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setUpdateContent(e.target.value)}
+                                rows={3}
+                                fullWidth
+                                charLimit={500}
+                            />
 
-                        <Button
-                            onClick={handleAddUpdate}
-                            fullWidth
-                            variant="primary"
-                            size="sm"
-                            disabled={!selectedProjectId || !updateContent.trim()}
-                        >
-                            Log Update
-                        </Button>
-                    </>
-                )}
-            </div>
+                            <Button
+                                onClick={handleAddUpdate}
+                                fullWidth
+                                variant="primary"
+                                size="sm"
+                                disabled={!selectedProjectId || !updateContent.trim()}
+                            >
+                                Log Update
+                            </Button>
+                        </>
+                    )}
+                </div>
+            )}
         </Card>
     );
 }

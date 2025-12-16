@@ -169,53 +169,53 @@ const initSchema = `
 `;
 
 async function initDb() {
-    const pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: process.env.NODE_ENV === 'production'
-            ? { rejectUnauthorized: false }
-            : false,
-    });
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
+  });
 
-    try {
-        console.log('📦 Initializing database...');
-        console.log(`📍 Database URL: ${process.env.DATABASE_URL}`);
+  try {
+    console.log('📦 Initializing database...');
+    console.log(`📍 Database URL: ${process.env.DATABASE_URL}`);
 
-        const client = await pool.connect();
+    const client = await pool.connect();
 
-        // Drop existing schema first
-        console.log('🗑️  Dropping existing tables...');
-        await client.query(dropSchema);
+    // Drop existing schema first
+    console.log('🗑️  Dropping existing tables...');
+    await client.query(dropSchema);
 
-        // Create new schema
-        console.log('🔨 Creating new schema...');
-        await client.query(initSchema);
+    // Create new schema
+    console.log('🔨 Creating new schema...');
+    await client.query(initSchema);
 
-        client.release();
+    client.release();
 
-        console.log('✅ Database schema created successfully!');
-        console.log('📊 Tables created:');
-        console.log('  - users');
-        console.log('  - daily_plans');
-        console.log('  - deep_work_zones');
-        console.log('  - quick_wins');
-        console.log('  - make_it_happen');
-        console.log('  - recharge_zones');
-        console.log('  - little_joys');
-        console.log('  - reflections_today');
-        console.log('  - focus_tomorrow');
-        console.log('  - core_memories');
-        console.log('  - projects');
-        console.log('  - project_updates');
-        console.log('✨ All indexes created successfully!');
-        console.log('');
-        console.log('🎉 Ready to use! Start your app with: npm run dev');
-    } catch (error) {
-        console.error('❌ Database initialization failed:');
-        console.error(error);
-        process.exit(1);
-    } finally {
-        await pool.end();
-    }
+    console.log('✅ Database schema created successfully!');
+    console.log('📊 Tables created:');
+    console.log('  - users');
+    console.log('  - daily_plans');
+    console.log('  - deep_work_zones');
+    console.log('  - quick_wins');
+    console.log('  - make_it_happen');
+    console.log('  - recharge_zones');
+    console.log('  - little_joys');
+    console.log('  - reflections_today');
+    console.log('  - focus_tomorrow');
+    console.log('  - core_memories');
+    console.log('  - projects');
+    console.log('  - project_updates');
+    console.log('✨ All indexes created successfully!');
+    console.log('');
+    console.log('🎉 Ready to use! Start your app with: npm run dev');
+  } catch (error) {
+    console.error('❌ Database initialization failed:');
+    console.error(error);
+    process.exit(1);
+  } finally {
+    await pool.end();
+  }
 }
 
 initDb();

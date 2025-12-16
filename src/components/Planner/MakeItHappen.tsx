@@ -14,9 +14,10 @@ interface MakeItHappenProps {
     onAdd: (item: { task: string; completed: boolean }) => void;
     onUpdate: (id: string, item: Partial<MakeItHappenItem>) => void;
     onDelete: (id: string) => void;
+    disabled?: boolean;
 }
 
-export function MakeItHappen({ item, onAdd, onUpdate, onDelete }: MakeItHappenProps) {
+export function MakeItHappen({ item, onAdd, onUpdate, onDelete, disabled = false }: MakeItHappenProps) {
     const [newTask, setNewTask] = useState('');
 
     const handleAdd = () => {
@@ -30,7 +31,7 @@ export function MakeItHappen({ item, onAdd, onUpdate, onDelete }: MakeItHappenPr
         <Card padding="lg" elevation="md">
             <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-2">💪 Make It Happen</h2>
-                <p className="text-sm text-gray-600">One task you've been avoiding</p>
+                <p className="text-sm text-gray-600">Spend 5 to 15 minutes on the one task you've been avoiding</p>
             </div>
 
             {item ? (
@@ -40,7 +41,8 @@ export function MakeItHappen({ item, onAdd, onUpdate, onDelete }: MakeItHappenPr
                             type="checkbox"
                             checked={item.completed}
                             onChange={(e) => onUpdate(item.id, { completed: e.target.checked })}
-                            className="w-5 h-5 text-red-600 rounded"
+                            disabled={disabled}
+                            className="w-5 h-5 text-red-600 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         <div className="flex-1">
                             <p className={`font-semibold ${item.completed ? 'line-through text-gray-400' : 'text-gray-900'}`}>
@@ -48,13 +50,19 @@ export function MakeItHappen({ item, onAdd, onUpdate, onDelete }: MakeItHappenPr
                             </p>
                             {item.completed && <p className="text-green-600 text-sm mt-1">✓ You did it!</p>}
                         </div>
-                        <button
-                            onClick={() => onDelete(item.id)}
-                            className="text-red-500 hover:text-red-700"
-                        >
-                            ✕
-                        </button>
+                        {!disabled && (
+                            <button
+                                onClick={() => onDelete(item.id)}
+                                className="text-red-500 hover:text-red-700"
+                            >
+                                ✕
+                            </button>
+                        )}
                     </div>
+                </div>
+            ) : disabled ? (
+                <div className="p-4 bg-gray-100 rounded-lg text-center text-gray-500">
+                    No task set for this date
                 </div>
             ) : (
                 <div className="space-y-3 p-4 bg-gray-50 rounded-lg">

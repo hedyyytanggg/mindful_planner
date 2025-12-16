@@ -16,9 +16,10 @@ interface DeepWorkZoneProps {
     onAdd: (item: { title: string; timeEstimate?: number; notes?: string; completed: boolean }) => void;
     onUpdate: (id: string, item: Partial<DeepWorkItem>) => void;
     onDelete: (id: string) => void;
+    disabled?: boolean;
 }
 
-export function DeepWorkZone({ items, onAdd, onUpdate, onDelete }: DeepWorkZoneProps) {
+export function DeepWorkZone({ items, onAdd, onUpdate, onDelete, disabled = false }: DeepWorkZoneProps) {
     const [newTitle, setNewTitle] = useState('');
     const [newTime, setNewTime] = useState('');
     const [newNotes, setNewNotes] = useState('');
@@ -51,8 +52,9 @@ export function DeepWorkZone({ items, onAdd, onUpdate, onDelete }: DeepWorkZoneP
                             type="checkbox"
                             checked={item.completed}
                             onChange={(e) => onUpdate(item.id, { completed: e.target.checked })}
+                            disabled={disabled}
                             aria-label={`Mark task "${item.title}" as ${item.completed ? 'incomplete' : 'complete'}`}
-                            className="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                            className="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         <div className="flex-1 min-w-0">
                             <h3 className={`font-semibold ${item.completed ? 'line-through text-gray-400' : 'text-gray-900'}`}>
@@ -65,18 +67,20 @@ export function DeepWorkZone({ items, onAdd, onUpdate, onDelete }: DeepWorkZoneP
                                 <p className="text-xs text-gray-600 mt-2">{item.notes}</p>
                             )}
                         </div>
-                        <button
-                            onClick={() => onDelete(item.id)}
-                            aria-label={`Delete task "${item.title}"`}
-                            className="text-red-600 hover:text-red-700 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-red-500 rounded px-2 py-1"
-                        >
-                            Delete
-                        </button>
+                        {!disabled && (
+                            <button
+                                onClick={() => onDelete(item.id)}
+                                aria-label={`Delete task "${item.title}"`}
+                                className="text-red-600 hover:text-red-700 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-red-500 rounded px-2 py-1"
+                            >
+                                Delete
+                            </button>
+                        )}
                     </div>
                 ))}
             </div>
 
-            {items.length < 2 && (
+            {items.length < 2 && !disabled && (
                 <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
                     <Input
                         label="Task Title"

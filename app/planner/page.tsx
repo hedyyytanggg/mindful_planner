@@ -86,6 +86,7 @@ export default function PlannerPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
+    const [isReadOnly, setIsReadOnly] = useState(false);
 
     // Deep Work State
     const [deepWork, setDeepWork] = useState<DeepWorkItem[]>([]);
@@ -122,6 +123,7 @@ export default function PlannerPage() {
 
         const today = new Date().toISOString().split('T')[0];
         setCurrentDate(today);
+        setIsReadOnly(isDateReadOnly(today));
         loadPlanForDate(today);
         loadProjects();
         setIsLoading(false);
@@ -129,6 +131,12 @@ export default function PlannerPage() {
 
     // Save plan to database (with localStorage fallback)
     const savePlanForDate = async (date: string) => {
+        // Don't save if date is read-only (older than 1 month)
+        if (isDateReadOnly(date)) {
+            console.log('⚠️ Skipping save for read-only date:', date);
+            return;
+        }
+
         if (!userId) {
             // User not authenticated, save to localStorage only
             savePlanToLocalStorage(date);
@@ -261,11 +269,36 @@ export default function PlannerPage() {
     const handleDateChange = async (newDate: string) => {
         await savePlanForDate(currentDate);
         setCurrentDate(newDate);
+        setIsReadOnly(isDateReadOnly(newDate));
         await loadPlanForDate(newDate);
+    };
+
+    // Check if a date is read-only (older than 1 month)
+    const isDateReadOnly = (dateStr: string) => {
+        const today = new Date();
+        const oneMonthAgo = new Date(today);
+        oneMonthAgo.setMonth(today.getMonth() - 1);
+        const minEditDateStr = oneMonthAgo.toISOString().split('T')[0];
+        return dateStr < minEditDateStr;
+    };
+
+    // Calculate minimum allowed date (1 year ago from today) for viewing
+    const getMinDate = () => {
+        const today = new Date();
+        const oneYearAgo = new Date(today);
+        oneYearAgo.setFullYear(today.getFullYear() - 1);
+        return oneYearAgo.toISOString().split('T')[0];
+    };
+
+    // Check if previous day button should be disabled
+    const isPreviousDayDisabled = () => {
+        const minDate = getMinDate();
+        return currentDate <= minDate;
     };
 
     // Navigate to previous day
     const goToPreviousDay = () => {
+        if (isPreviousDayDisabled()) return;
         const date = new Date(currentDate);
         date.setDate(date.getDate() - 1);
         handleDateChange(date.toISOString().split('T')[0]);
@@ -563,7 +596,7 @@ export default function PlannerPage() {
         }
     };
 
-    // Export Plan
+    /* Export Plan - hidden for now
     const handleExport = () => {
         const plan = {
             date: new Date().toLocaleDateString(),
@@ -587,6 +620,7 @@ export default function PlannerPage() {
         link.download = `daily-plan-${new Date().toISOString().split('T')[0]}.json`;
         link.click();
     };
+    */
 
     return (
         <div className="bg-gradient-to-b from-blue-50 to-gray-50 min-h-screen">
@@ -633,16 +667,19 @@ export default function PlannerPage() {
                                 {!userId && <span className="ml-2 text-gray-500">📱 Local only</span>}
                             </p>
                         </div>
+                        {/* Export button - hidden for now
                         <Button onClick={handleExport} variant="secondary">
                             📥 Export
                         </Button>
+                        */}
                     </div>
 
                     {/* Date Navigation */}
                     <div className="flex items-center gap-2 pt-4 border-t border-gray-200">
                         <button
                             onClick={goToPreviousDay}
-                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={isPreviousDayDisabled()}
+                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
                             aria-label="Go to previous day"
                         >
                             ← Prev
@@ -651,6 +688,7 @@ export default function PlannerPage() {
                         <input
                             type="date"
                             value={currentDate}
+                            min={getMinDate()}
                             max={new Date().toISOString().split('T')[0]}
                             onChange={(e) => handleDateChange(e.target.value)}
                             className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -677,6 +715,16 @@ export default function PlannerPage() {
                             📅 Today
                         </button>
                     </div>
+
+                    {/* Read-only notice */}
+                    {isReadOnly && (
+                        <div className="mt-3 pt-3 border-t border-gray-200">
+                            <p className="text-xs text-gray-500 italic flex items-center gap-1">
+                                <span>🔒</span>
+                                <span>Read-only: This date is older than 1 month</span>
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -709,24 +757,28 @@ export default function PlannerPage() {
                         onAdd={handleAddDeepWork}
                         onUpdate={handleUpdateDeepWork}
                         onDelete={handleDeleteDeepWork}
+                        disabled={isReadOnly}
                     />
                     <QuickWins
                         items={quickWins}
                         onAdd={handleAddQuickWin}
                         onUpdate={handleUpdateQuickWin}
                         onDelete={handleDeleteQuickWin}
+                        disabled={isReadOnly}
                     />
                     <MakeItHappen
                         item={makeItHappen}
                         onAdd={handleAddMakeItHappen}
                         onUpdate={handleUpdateMakeItHappen}
                         onDelete={handleDeleteMakeItHappen}
+                        disabled={isReadOnly}
                     />
                     <RechargeZone
                         items={recharge}
                         onAdd={handleAddRecharge}
                         onUpdate={handleUpdateRecharge}
                         onDelete={handleDeleteRecharge}
+                        disabled={isReadOnly}
                     />
                 </div>
 
@@ -736,16 +788,14 @@ export default function PlannerPage() {
                         joys={littleJoys}
                         onAdd={handleAddJoy}
                         onDelete={handleDeleteJoy}
+                        disabled={isReadOnly}
                     />
-                </div>
-
-                {/* Core Memories Section */}
-                <div className="mt-8">
                     <CoreMemories
                         memories={coreMemories}
                         currentDate={currentDate}
                         onAdd={handleAddMemory}
                         onDelete={handleDeleteMemory}
+                        disabled={isReadOnly}
                     />
                 </div>
 
@@ -758,6 +808,7 @@ export default function PlannerPage() {
                         onAddProject={handleAddProject}
                         onAddUpdate={handleAddProjectUpdate}
                         onDeleteUpdate={handleDeleteProjectUpdate}
+                        disabled={isReadOnly}
                     />
                 </div>
 
@@ -766,10 +817,12 @@ export default function PlannerPage() {
                     <ReflectionToday
                         content={reflection}
                         onSave={setReflection}
+                        disabled={isReadOnly}
                     />
                     <FocusTomorrow
                         content={focusTomorrow}
                         onSave={setFocusTomorrow}
+                        disabled={isReadOnly}
                     />
                 </div>
             </main>

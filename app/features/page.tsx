@@ -50,19 +50,14 @@ export default function FeaturesPage() {
             description: 'Set 1-3 priorities for your next day to start with clarity and direction.',
         },
         {
-            icon: '📥',
-            title: 'Export Plans',
-            description: 'Download your daily plans as JSON, PDF, or CSV for your records and review.',
-        },
-        {
             icon: '📅',
             title: 'Browse History',
             description: 'Navigate through your past plans to track patterns and see your progress over time.',
         },
         {
-            icon: '💾',
-            title: 'Local Storage',
-            description: 'Your plans are securely saved locally on your device - always available, always private.',
+            icon: '🔒',
+            title: 'Secure Cloud Storage',
+            description: 'Your plans are securely saved with authentication and encryption - always available, always protected.',
         },
     ];
 
@@ -95,6 +90,7 @@ export default function FeaturesPage() {
                     ))}
                 </div>
 
+                {/* Coming Soon section - hidden for now
                 <Card padding="md">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Coming Soon</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
@@ -124,6 +120,7 @@ export default function FeaturesPage() {
                         </div>
                     </div>
                 </Card>
+                */}
             </div>
         </div>
     );

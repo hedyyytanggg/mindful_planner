@@ -8,76 +8,147 @@ export default function AboutPage() {
             <div className="max-w-3xl mx-auto px-6">
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">🧘 About Mindful Planner</h1>
-                    <p className="text-gray-600">Learn more about our mission and vision</p>
+                    <p className="text-gray-600">The story behind a different kind of planner</p>
                 </div>
 
                 <div className="space-y-6">
-                    {/* Mission */}
+                    {/* Origin Story */}
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
-                        <p className="text-gray-700 leading-relaxed">
-                            We believe that intentional planning leads to meaningful productivity. Mindful Planner is designed to help people structure their days with purpose, balance work with wellness, capture cherished moments, and build sustainable habits that lead to both achievement and well-being.
-                        </p>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Why I Built This</h2>
+                        <div className="space-y-4 text-gray-700 leading-relaxed">
+                            <p>
+                                I tried them all. <strong>To-do lists</strong> that felt like endless obligation machines. <strong>Time-grid planners</strong> that turned my days into rigid prisons. Both promised productivity, but neither understood what I actually needed.
+                            </p>
+                            <p>
+                                To-do lists reduced my life to checkboxes—no context, no meaning, just an ever-growing list that made me feel perpetually behind. Time-grid planners sliced my day into tiny blocks, as if I were a factory worker on an assembly line.
+                            </p>
+                            <p>
+                                <strong>Neither helped me stay focused on what truly mattered. Neither tracked the progress I was actually proud of. Neither captured the moments worth remembering.</strong>
+                            </p>
+                            <p>
+                                So I built Mindful Planner. Not another task manager. Not another calendar grid. A <strong>purpose-driven planning system</strong> for people who want to accomplish meaningful work <em>and</em> live a full life.
+                            </p>
+                        </div>
                     </Card>
 
-                    {/* Vision */}
+                    {/* Philosophy */}
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h2>
-                        <p className="text-gray-700 leading-relaxed">
-                            To create a world where people feel accomplished, focused, and balanced. We envision a planning tool that adapts to individual needs, respects your time, and helps you achieve your goals without sacrificing your well-being.
-                        </p>
-                    </Card>
-
-                    {/* Values */}
-                    <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Values</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Philosophy</h2>
+                        <div className="space-y-6">
                             <div>
-                                <h3 className="font-semibold text-gray-900 mb-2">🎯 Intentionality</h3>
-                                <p className="text-gray-700 text-sm">Every feature is designed with purpose in mind.</p>
+                                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                                    <span className="text-2xl">🎯</span>
+                                    Focus Over Frenzy
+                                </h3>
+                                <p className="text-gray-700 text-sm">
+                                    We don't ask you to manage 47 tasks. We help you identify 1-2 deep work priorities, a handful of quick wins, and one thing you've been avoiding. This isn't about doing everything. It's about doing what matters.
+                                </p>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-gray-900 mb-2">🧘 Mindfulness</h3>
-                                <p className="text-gray-700 text-sm">We promote awareness and self-reflection.</p>
+                                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                                    <span className="text-2xl">📈</span>
+                                    Progress Over Perfection
+                                </h3>
+                                <p className="text-gray-700 text-sm">
+                                    Life happens beyond work. We give you space to track ongoing projects and hobbies—learning guitar, building a garden, whatever matters to you. Progress on your side project deserves as much attention as your work tasks.
+                                </p>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-gray-900 mb-2">⚖️ Balance</h3>
-                                <p className="text-gray-700 text-sm">Work and wellness go hand in hand.</p>
-                            </div>
-                            <div>
-                                <h3 className="font-semibold text-gray-900 mb-2">🔒 Privacy</h3>
-                                <p className="text-gray-700 text-sm">Your data is yours. We respect your privacy.</p>
+                                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                                    <span className="text-2xl">💫</span>
+                                    Meaning Over Motion
+                                </h3>
+                                <p className="text-gray-700 text-sm">
+                                    Productivity tools forget you're human. We don't. Every day includes recharge activities, little joys, core memories, and reflection. We measure success not just in tasks completed, but in days well-lived.
+                                </p>
                             </div>
                         </div>
                     </Card>
 
-                    {/* Team */}
+                    {/* What Makes Us Different */}
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Team</h2>
-                        <p className="text-gray-700 leading-relaxed mb-6">
-                            Mindful Planner was built by a passionate team of designers, developers, and productivity enthusiasts who believe that technology should serve people, not the other way around.
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">What Makes Us Different</h2>
+                        <div className="space-y-4 text-gray-700">
+                            <div className="flex gap-3">
+                                <span className="text-green-600 text-xl flex-shrink-0">✓</span>
+                                <div>
+                                    <p className="font-semibold text-gray-900">Zone-based structure that guides without constraining</p>
+                                    <p className="text-sm">Deep Work, Quick Wins, Recharge—each zone serves a purpose</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-3">
+                                <span className="text-green-600 text-xl flex-shrink-0">✓</span>
+                                <div>
+                                    <p className="font-semibold text-gray-900">Track projects, hobbies, and events alongside work</p>
+                                    <p className="text-sm">Activity Log keeps you consistent on what you care about</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-3">
+                                <span className="text-green-600 text-xl flex-shrink-0">✓</span>
+                                <div>
+                                    <p className="font-semibold text-gray-900">Capture joys and meaningful moments</p>
+                                    <p className="text-sm">Little Joys and Core Memories help you remember what counts</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-3">
+                                <span className="text-green-600 text-xl flex-shrink-0">✓</span>
+                                <div>
+                                    <p className="font-semibold text-gray-900">Built for balance, not burnout</p>
+                                    <p className="text-sm">Productivity AND wellbeing in one system</p>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Core Values */}
+                    <Card padding="md">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Values</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h3 className="font-semibold text-gray-900 mb-2">🔒 Privacy-First</h3>
+                                <p className="text-gray-700 text-sm">Your data is protected with secure authentication. No tracking, no ads, no selling your information.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-gray-900 mb-2">🌱 Human-Centered</h3>
+                                <p className="text-gray-700 text-sm">Built for humans, not productivity machines. We honor your energy, your life, your whole self.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-gray-900 mb-2">💡 Purpose-Driven</h3>
+                                <p className="text-gray-700 text-sm">Every feature asks: does this help you focus on what matters? If not, we don't build it.</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-gray-900 mb-2">⚖️ Balance by Design</h3>
+                                <p className="text-gray-700 text-sm">Work and wellness go hand in hand. Sustainable productivity, not hustle culture.</p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Who It's For */}
+                    <Card padding="md">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Who It's For</h2>
+                        <p className="text-gray-700 mb-4">
+                            Mindful Planner is for people who are tired of planning tools that overwhelm or constrain. If any of these sound like you, you're in the right place:
                         </p>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl">
-                                    👨‍💼
-                                </div>
-                                <h3 className="font-semibold text-gray-900">Product Lead</h3>
-                                <p className="text-sm text-gray-600">Strategy & Vision</p>
+                        <div className="space-y-3 text-gray-700 text-sm">
+                            <div className="flex gap-2">
+                                <span>→</span>
+                                <p>"I'm always busy but never feel like I'm making progress on what matters"</p>
                             </div>
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl">
-                                    👨‍💻
-                                </div>
-                                <h3 className="font-semibold text-gray-900">Lead Engineer</h3>
-                                <p className="text-sm text-gray-600">Architecture & Dev</p>
+                            <div className="flex gap-2">
+                                <span>→</span>
+                                <p>"To-do lists make me anxious, but I need some structure"</p>
                             </div>
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl">
-                                    👨‍🎨
-                                </div>
-                                <h3 className="font-semibold text-gray-900">UX/UI Designer</h3>
-                                <p className="text-sm text-gray-600">Design & UX</p>
+                            <div className="flex gap-2">
+                                <span>→</span>
+                                <p>"I keep abandoning my hobbies because I can't track them"</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <span>→</span>
+                                <p>"I wish I could remember the good moments, not just the tasks"</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <span>→</span>
+                                <p>"I'm tired of planning tools that treat me like a productivity robot"</p>
                             </div>
                         </div>
                     </Card>
@@ -92,15 +163,15 @@ export default function AboutPage() {
                             </div>
                             <div className="flex justify-between">
                                 <span>Release Date:</span>
-                                <span>December 15, 2025</span>
+                                <span>December 16, 2025</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Status:</span>
-                                <span className="text-blue-600 font-semibold">MVP - In Development</span>
+                                <span className="text-blue-600 font-semibold">Active Development</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Latest Features:</span>
-                                <span className="text-purple-600 font-semibold">Core Memories, Date-based Planning</span>
+                                <span className="text-purple-600 font-semibold">Activity Log, Core Memories</span>
                             </div>
                         </div>
                     </Card>
@@ -109,17 +180,11 @@ export default function AboutPage() {
                     <Card padding="md">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Get in Touch</h2>
                         <p className="text-gray-700 mb-4">
-                            Have questions or feedback? We'd love to hear from you!
+                            Have questions, feedback, or just want to share your story? I'd love to hear from you.
                         </p>
                         <div className="space-y-2 text-sm">
                             <p>
                                 📧 Email: <a href="mailto:hello@mindfulplanner.com" className="text-blue-600 hover:underline">hello@mindfulplanner.com</a>
-                            </p>
-                            <p>
-                                🐦 Twitter: <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">@MindfulPlanner</a>
-                            </p>
-                            <p>
-                                💬 Discord: <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Join our community</a>
                             </p>
                         </div>
                     </Card>

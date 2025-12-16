@@ -13,9 +13,10 @@ interface CoreMemoriesProps {
     currentDate: string;
     onAdd: (memory: Omit<CoreMemory, 'id'>) => void;
     onDelete: (id: string) => void;
+    disabled?: boolean;
 }
 
-export function CoreMemories({ memories, currentDate, onAdd, onDelete }: CoreMemoriesProps) {
+export function CoreMemories({ memories, currentDate, onAdd, onDelete, disabled = false }: CoreMemoriesProps) {
     const [newTitle, setNewTitle] = useState('');
     const [newDescription, setNewDescription] = useState('');
 
@@ -53,41 +54,45 @@ export function CoreMemories({ memories, currentDate, onAdd, onDelete }: CoreMem
                                 <h4 className="font-semibold text-gray-900 mb-1">{memory.title}</h4>
                                 <p className="text-gray-700 text-sm">{memory.description}</p>
                             </div>
-                            <button
-                                onClick={() => onDelete(memory.id)}
-                                className="text-red-500 hover:text-red-700 font-bold flex-shrink-0 text-lg"
-                                aria-label="Delete memory"
-                            >
-                                ✕
-                            </button>
+                            {!disabled && (
+                                <button
+                                    onClick={() => onDelete(memory.id)}
+                                    className="text-red-500 hover:text-red-700 font-bold flex-shrink-0 text-lg"
+                                    aria-label="Delete memory"
+                                >
+                                    ✕
+                                </button>
+                            )}
                         </div>
                     </div>
                 ))}
             </div>
 
             {/* Add Memory Form */}
-            <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
-                <Input
-                    type="text"
-                    placeholder="Memory title"
-                    value={newTitle}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.target.value)}
-                    fullWidth
-                />
+            {!disabled && (
+                <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+                    <Input
+                        type="text"
+                        placeholder="Memory title"
+                        value={newTitle}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.target.value)}
+                        fullWidth
+                    />
 
-                <Textarea
-                    placeholder="Tell the story of this memory..."
-                    value={newDescription}
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setNewDescription(e.target.value)}
-                    rows={3}
-                    fullWidth
-                    charLimit={500}
-                />
+                    <Textarea
+                        placeholder="Tell the story of this memory..."
+                        value={newDescription}
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setNewDescription(e.target.value)}
+                        rows={3}
+                        fullWidth
+                        charLimit={500}
+                    />
 
-                <Button onClick={handleAdd} fullWidth variant="primary" size="sm">
-                    Add Memory
-                </Button>
-            </div>
+                    <Button onClick={handleAdd} fullWidth variant="primary" size="sm">
+                        Add Memory
+                    </Button>
+                </div>
+            )}
         </Card>
     );
 }

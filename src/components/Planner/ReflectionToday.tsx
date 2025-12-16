@@ -6,9 +6,10 @@ import { Card, Textarea, Button } from '@/components/Common';
 interface ReflectionProps {
     content: string | null;
     onSave: (content: string | null) => void;
+    disabled?: boolean;
 }
 
-export function ReflectionToday({ content, onSave }: ReflectionProps) {
+export function ReflectionToday({ content, onSave, disabled = false }: ReflectionProps) {
     const [isEditing, setIsEditing] = useState(!content);
     const [text, setText] = useState(content || '');
 
@@ -30,7 +31,17 @@ export function ReflectionToday({ content, onSave }: ReflectionProps) {
                 <p className="text-sm text-gray-600">What did you learn? What went well?</p>
             </div>
 
-            {isEditing ? (
+            {disabled ? (
+                content ? (
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                        <p className="text-gray-800 whitespace-pre-wrap">{content}</p>
+                    </div>
+                ) : (
+                    <div className="p-4 bg-gray-100 rounded-lg text-center text-gray-500">
+                        No reflection for this date
+                    </div>
+                )
+            ) : isEditing ? (
                 <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
                     <Textarea
                         placeholder="Reflect on your day... What worked well? What did you learn?"
@@ -60,12 +71,14 @@ export function ReflectionToday({ content, onSave }: ReflectionProps) {
             ) : (
                 <div className="p-4 bg-indigo-50 rounded-lg">
                     <p className="text-gray-800 mb-4">{content}</p>
-                    <button
-                        onClick={() => setIsEditing(true)}
-                        className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                    >
-                        Edit
-                    </button>
+                    {!disabled && (
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                        >
+                            Edit
+                        </button>
+                    )}
                 </div>
             )}
         </Card>

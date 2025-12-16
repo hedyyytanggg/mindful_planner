@@ -28,13 +28,15 @@ interface RechargeZoneProps {
     onAdd: (activity: { activityId?: string; customActivity?: string; completed: boolean }) => void;
     onUpdate: (id: string, updates: Partial<RechargeZoneRecord>) => void;
     onDelete?: (id: string) => void;
+    disabled?: boolean;
 }
 
-export function RechargeZone({ items = [], onAdd, onUpdate, onDelete }: RechargeZoneProps) {
+export function RechargeZone({ items = [], onAdd, onUpdate, onDelete, disabled = false }: RechargeZoneProps) {
     const [showCustomInput, setShowCustomInput] = useState(false);
     const [customActivity, setCustomActivity] = useState('');
 
     const handleActivityClick = (activityId: string) => {
+        if (disabled) return;
         const existing = items?.find(item => item.activityId === activityId);
         if (existing) {
             // Toggle completion
@@ -46,6 +48,7 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete }: Recharge
     };
 
     const handleAddCustom = () => {
+        if (disabled) return;
         if (customActivity.trim()) {
             onAdd({ customActivity: customActivity.trim(), completed: true });
             setCustomActivity('');
@@ -76,8 +79,8 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete }: Recharge
                             aria-label={`Mark ${activity.id} as ${isCompleted ? 'incomplete' : 'complete'}`}
                             aria-pressed={isCompleted}
                             className={`p-3 text-left rounded-lg transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-blue-500 ${isCompleted
-                                    ? 'bg-green-100 ring-2 ring-green-400 scale-105'
-                                    : 'bg-blue-50 hover:bg-blue-100 active:scale-95'
+                                ? 'bg-green-100 ring-2 ring-green-400 scale-105'
+                                : 'bg-blue-50 hover:bg-blue-100 active:scale-95'
                                 }`}
                         >
                             <div
@@ -104,8 +107,8 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete }: Recharge
                     <div
                         key={item.id}
                         className={`p-3 mb-2 rounded-lg flex items-center justify-between ${item.completed
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-gray-100 text-gray-700'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-700'
                             }`}
                     >
                         <div className="flex items-center gap-2">

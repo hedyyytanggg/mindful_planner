@@ -6,9 +6,10 @@ import { Card, Textarea, Button } from '@/components/Common';
 interface FocusTomorrowProps {
     content: string | null;
     onSave: (content: string | null) => void;
+    disabled?: boolean;
 }
 
-export function FocusTomorrow({ content, onSave }: FocusTomorrowProps) {
+export function FocusTomorrow({ content, onSave, disabled = false }: FocusTomorrowProps) {
     const [isEditing, setIsEditing] = useState(!content);
     const [text, setText] = useState(content || '');
 
@@ -30,7 +31,17 @@ export function FocusTomorrow({ content, onSave }: FocusTomorrowProps) {
                 <p className="text-sm text-gray-600">1-3 priorities to focus on</p>
             </div>
 
-            {isEditing ? (
+            {disabled ? (
+                content ? (
+                    <div className="p-4 bg-purple-50 rounded-lg">
+                        <p className="text-gray-800 whitespace-pre-wrap">{content}</p>
+                    </div>
+                ) : (
+                    <div className="p-4 bg-gray-100 rounded-lg text-center text-gray-500">
+                        No focus set for this date
+                    </div>
+                )
+            ) : isEditing ? (
                 <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
                     <Textarea
                         placeholder="What will be your top 1-3 priorities tomorrow?"
@@ -60,12 +71,14 @@ export function FocusTomorrow({ content, onSave }: FocusTomorrowProps) {
             ) : (
                 <div className="p-4 bg-orange-50 rounded-lg">
                     <p className="text-gray-800 mb-4 whitespace-pre-wrap">{content}</p>
-                    <button
-                        onClick={() => setIsEditing(true)}
-                        className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                    >
-                        Edit
-                    </button>
+                    {!disabled && (
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                        >
+                            Edit
+                        </button>
+                    )}
                 </div>
             )}
         </Card>

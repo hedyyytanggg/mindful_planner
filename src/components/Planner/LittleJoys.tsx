@@ -7,9 +7,10 @@ interface LittleJoysProps {
     joys: string[];
     onAdd: (joy: string) => void;
     onDelete: (index: number) => void;
+    disabled?: boolean;
 }
 
-export function LittleJoys({ joys, onAdd, onDelete }: LittleJoysProps) {
+export function LittleJoys({ joys, onAdd, onDelete, disabled = false }: LittleJoysProps) {
     const [newJoy, setNewJoy] = useState('');
 
     const handleAdd = () => {
@@ -31,18 +32,20 @@ export function LittleJoys({ joys, onAdd, onDelete }: LittleJoysProps) {
                     <div key={index} className="p-4 bg-purple-50 rounded-lg">
                         <div className="flex justify-between items-start gap-3">
                             <p className="text-gray-800 text-sm">{joy}</p>
-                            <button
-                                onClick={() => onDelete(index)}
-                                className="text-red-500 hover:text-red-700 font-bold"
-                            >
-                                ✕
-                            </button>
+                            {!disabled && (
+                                <button
+                                    onClick={() => onDelete(index)}
+                                    className="text-red-500 hover:text-red-700 font-bold"
+                                >
+                                    ✕
+                                </button>
+                            )}
                         </div>
                     </div>
                 ))}
             </div>
 
-            {joys.length < 3 && (
+            {joys.length < 3 && !disabled && (
                 <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
                     <Textarea
                         placeholder="What made you smile today? What are you grateful for?"

@@ -7,6 +7,25 @@ import {
     deleteProjectUpdate,
 } from '@/lib/dbHelpers';
 
+// Helper function to validate date is not more than 1 month ago (for creating/editing)
+function validateDateNotTooOldForEditing(dateString: string): { valid: boolean; error?: string } {
+    const today = new Date();
+    const oneMonthAgo = new Date(today);
+    oneMonthAgo.setMonth(today.getMonth() - 1);
+
+    // Compare date strings to avoid time component issues
+    const minDateStr = oneMonthAgo.toISOString().split('T')[0];
+
+    if (dateString < minDateStr) {
+        return {
+            valid: false,
+            error: 'Cannot create updates with dates older than 1 month'
+        };
+    }
+
+    return { valid: true };
+}
+
 export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -49,6 +68,15 @@ export async function POST(req: NextRequest) {
         if (!projectId || !planId || !updateDate || !content) {
             return NextResponse.json(
                 { error: 'Missing required fields: projectId, planId, updateDate, content' },
+                { status: 400 }
+            );
+        }
+
+        // Validate update date is not older than 1 month
+        const dateValidation = validateDateNotTooOldForEditing(updateDate);
+        if (!dateValidation.valid) {
+            return NextResponse.json(
+                { error: dateValidation.error },
                 { status: 400 }
             );
         }

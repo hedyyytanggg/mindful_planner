@@ -14,9 +14,10 @@ interface QuickWinsProps {
     onAdd: (item: { title: string; completed: boolean }) => void;
     onUpdate: (id: string, item: Partial<QuickWinItem>) => void;
     onDelete: (id: string) => void;
+    disabled?: boolean;
 }
 
-export function QuickWins({ items, onAdd, onUpdate, onDelete }: QuickWinsProps) {
+export function QuickWins({ items, onAdd, onUpdate, onDelete, disabled = false }: QuickWinsProps) {
     const [newTitle, setNewTitle] = useState('');
 
     const handleAdd = () => {
@@ -42,22 +43,25 @@ export function QuickWins({ items, onAdd, onUpdate, onDelete }: QuickWinsProps) 
                             type="checkbox"
                             checked={item.completed}
                             onChange={(e) => onUpdate(item.id, { completed: e.target.checked })}
-                            className="w-5 h-5 text-yellow-600 rounded"
+                            disabled={disabled}
+                            className="w-5 h-5 text-yellow-600 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         <span className={`flex-1 ${item.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
                             {item.title}
                         </span>
-                        <button
-                            onClick={() => onDelete(item.id)}
-                            className="text-red-500 hover:text-red-700 text-sm"
-                        >
-                            ✕
-                        </button>
+                        {!disabled && (
+                            <button
+                                onClick={() => onDelete(item.id)}
+                                className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                                ✕
+                            </button>
+                        )}
                     </div>
                 ))}
             </div>
 
-            {items.length < 5 && (
+            {items.length < 5 && !disabled && (
                 <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
                     <Input
                         placeholder="Add a quick win (email, call, etc.)..."
