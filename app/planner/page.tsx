@@ -11,6 +11,7 @@ import { LittleJoys } from '@/components/Planner/LittleJoys';
 import { ReflectionToday } from '@/components/Planner/ReflectionToday';
 import { FocusTomorrow } from '@/components/Planner/FocusTomorrow';
 import { CoreMemories } from '@/components/Planner/CoreMemories';
+import { ProjectUpdates } from '@/components/Planner/ProjectUpdates';
 import { Button } from '@/components/Common';
 
 interface DeepWorkItem {
@@ -49,6 +50,21 @@ interface CoreMemory {
     memoryDate: string;
     createdAt?: string;
     updatedAt?: string;
+}
+
+interface Project {
+    id: string;
+    name: string;
+    description: string | null;
+    isActive: boolean;
+}
+
+interface ProjectUpdate {
+    id: string;
+    projectId: string;
+    projectName?: string;
+    content: string;
+    updateDate: string;
 }
 
 export default function PlannerPage() {
@@ -95,6 +111,11 @@ export default function PlannerPage() {
     // Core Memories State
     const [coreMemories, setCoreMemories] = useState<CoreMemory[]>([]);
 
+    // Projects State
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [projectUpdates, setProjectUpdates] = useState<ProjectUpdate[]>([]);
+    const [planId, setPlanId] = useState<string | null>(null);
+
     // Initialize date and load data from database or localStorage
     useEffect(() => {
         if (authStatus === 'loading') return;
@@ -102,6 +123,7 @@ export default function PlannerPage() {
         const today = new Date().toISOString().split('T')[0];
         setCurrentDate(today);
         loadPlanForDate(today);
+        loadProjects();
         setIsLoading(false);
     }, [authStatus, userId]);
 
@@ -184,6 +206,12 @@ export default function PlannerPage() {
 
             const dbPlan = await response.json();
 
+            // Store plan ID for project updates
+            if (dbPlan.id) {
+                setPlanId(dbPlan.id);
+                loadProjectUpdates(dbPlan.id);
+            }
+
             // Update state with database data
             setDeepWork(dbPlan.deep_work || []);
             setQuickWins(dbPlan.quick_wins || []);
@@ -248,6 +276,13 @@ export default function PlannerPage() {
         const date = new Date(currentDate);
         date.setDate(date.getDate() + 1);
         handleDateChange(date.toISOString().split('T')[0]);
+    };
+
+    // Check if next day button should be disabled
+    const isNextDayDisabled = () => {
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        return currentDate >= todayStr;
     };
 
     // Navigate to today
@@ -420,6 +455,114 @@ export default function PlannerPage() {
         }
     };
 
+    // Load Projects
+    const loadProjects = async () => {
+        if (!userId) return;
+
+        try {
+            const response = await fetch(`/api/projects?activeOnly=true`);
+            if (!response.ok) {
+                throw new Error('Failed to load projects');
+            }
+            const data = await response.json();
+            setProjects(data.projects || []);
+        } catch (error: unknown) {
+            console.error('Error loading projects:', error);
+        }
+    };
+
+    // Load Project Updates
+    const loadProjectUpdates = async (currentPlanId: string) => {
+        if (!currentPlanId) return;
+
+        try {
+            const response = await fetch(`/api/project-updates?planId=${currentPlanId}`);
+            if (!response.ok) {
+                throw new Error('Failed to load project updates');
+            }
+            const data = await response.json();
+            setProjectUpdates(data.updates || []);
+        } catch (error: unknown) {
+            console.error('Error loading project updates:', error);
+        }
+    };
+
+    // Add Project
+    const handleAddProject = async (name: string, description: string) => {
+        if (!userId) return;
+
+        try {
+            const response = await fetch('/api/projects', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, description }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create project');
+            }
+
+            const data = await response.json();
+            setProjects([...projects, data.project]);
+            console.log('✅ Project created');
+        } catch (error: unknown) {
+            console.error('Error creating project:', error);
+            setSaveError('Failed to create project');
+        }
+    };
+
+    // Add Project Update
+    const handleAddProjectUpdate = async (projectId: string, content: string) => {
+        if (!planId) return;
+
+        try {
+            const response = await fetch('/api/project-updates', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    projectId,
+                    planId,
+                    updateDate: currentDate,
+                    content,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add project update');
+            }
+
+            const data = await response.json();
+            setProjectUpdates([data.update, ...projectUpdates]);
+            console.log('✅ Project update added');
+        } catch (error: unknown) {
+            console.error('Error adding project update:', error);
+            setSaveError('Failed to add project update');
+        }
+    };
+
+    // Delete Project Update
+    const handleDeleteProjectUpdate = async (id: string) => {
+        try {
+            const response = await fetch(`/api/project-updates?id=${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete project update');
+            }
+
+            setProjectUpdates(projectUpdates.filter(u => u.id !== id));
+            console.log('✅ Project update deleted');
+        } catch (error: unknown) {
+            console.error('Error deleting project update:', error);
+            setSaveError('Failed to delete project update');
+        }
+    };
+
     // Export Plan
     const handleExport = () => {
         const plan = {
@@ -508,6 +651,7 @@ export default function PlannerPage() {
                         <input
                             type="date"
                             value={currentDate}
+                            max={new Date().toISOString().split('T')[0]}
                             onChange={(e) => handleDateChange(e.target.value)}
                             className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             aria-label="Select a date"
@@ -515,7 +659,8 @@ export default function PlannerPage() {
 
                         <button
                             onClick={goToNextDay}
-                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={isNextDayDisabled()}
+                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
                             aria-label="Go to next day"
                         >
                             Next →
@@ -601,6 +746,18 @@ export default function PlannerPage() {
                         currentDate={currentDate}
                         onAdd={handleAddMemory}
                         onDelete={handleDeleteMemory}
+                    />
+                </div>
+
+                {/* Project Updates Section */}
+                <div className="mt-6">
+                    <ProjectUpdates
+                        projects={projects}
+                        updates={projectUpdates}
+                        currentDate={currentDate}
+                        onAddProject={handleAddProject}
+                        onAddUpdate={handleAddProjectUpdate}
+                        onDeleteUpdate={handleDeleteProjectUpdate}
                     />
                 </div>
 

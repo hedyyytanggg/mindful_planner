@@ -30,6 +30,16 @@ export default function FeaturesPage() {
             description: 'Capture 1-3 positive moments from your day to build a gratitude practice.',
         },
         {
+            icon: '💎',
+            title: 'Core Memories',
+            description: 'Capture and cherish meaningful moments from your day. Store precious memories tied to specific dates for reflection.',
+        },
+        {
+            icon: '📚',
+            title: 'Activity Tracking',
+            description: 'Track ongoing projects, hobbies, and events with daily updates to monitor your progress.',
+        },
+        {
             icon: '🤔',
             title: 'Reflection for Today',
             description: 'End your day with intention by reflecting on what you learned and accomplished.',

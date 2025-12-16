@@ -4,12 +4,12 @@ export default function Home() {
   return (
     <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-        <div className="max-w-md text-center">
+        <div className="max-w-2xl text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             Plan Your Day with Intention
           </h1>
           <p className="text-xl text-gray-600 mb-8">
-            Structure your day into 7 purposeful zones and build sustainable, mindful productivity habits.
+            Structure your day into 7 purposeful zones, capture cherished memories, and build sustainable, mindful productivity habits.
           </p>
 
           <Link
@@ -20,22 +20,26 @@ export default function Home() {
           </Link>
 
           <p className="text-sm text-gray-500">
-            Built with focus, balance, and mindfulness
+            Built with focus, balance, mindfulness, and cherished moments
           </p>
 
           {/* Features Preview */}
           <div className="mt-12 grid grid-cols-1 gap-4">
             <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
               <h2 className="sr-only">7 Planning Zones Feature</h2>
-              <p className="text-sm text-gray-700"><span aria-hidden="true">🎯</span> <strong>7 Planning Zones</strong> - Deep work, quick wins, recharge & more</p>
+              <p className="text-sm text-gray-700"><span aria-hidden="true">🎯</span> <strong>7 Planning Zones</strong> - Deep work, quick wins, recharge, and more</p>
+            </div>
+            <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+              <h2 className="sr-only">Core Memories Feature</h2>
+              <p className="text-sm text-gray-700"><span aria-hidden="true">💎</span> <strong>Core Memories</strong> - Capture and cherish your meaningful moments</p>
             </div>
             <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
               <h2 className="sr-only">Track Progress Feature</h2>
               <p className="text-sm text-gray-700"><span aria-hidden="true">📊</span> <strong>Track Progress</strong> - Visualize your completion in real-time</p>
             </div>
             <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-              <h2 className="sr-only">Local Storage Feature</h2>
-              <p className="text-sm text-gray-700"><span aria-hidden="true">💾</span> <strong>Local Storage</strong> - Your plans are saved securely</p>
+              <h2 className="sr-only">Secure Storage Feature</h2>
+              <p className="text-sm text-gray-700"><span aria-hidden="true">🔒</span> <strong>Secure Storage</strong> - Your plans and memories saved with authentication</p>
             </div>
           </div>
         </div>

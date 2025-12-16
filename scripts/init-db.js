@@ -16,6 +16,8 @@ require('dotenv').config({ path: '.env.local' });
 
 const dropSchema = `
   -- Drop all existing tables (in reverse order of dependencies)
+  DROP TABLE IF EXISTS project_updates CASCADE;
+  DROP TABLE IF EXISTS projects CASCADE;
   DROP TABLE IF EXISTS reflections_today CASCADE;
   DROP TABLE IF EXISTS focus_tomorrow CASCADE;
   DROP TABLE IF EXISTS little_joys CASCADE;
@@ -131,6 +133,28 @@ const initSchema = `
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
+  -- Projects/Hobbies table
+  CREATE TABLE IF NOT EXISTS projects (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    userId VARCHAR(25) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    isActive BOOLEAN DEFAULT true,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Project updates table
+  CREATE TABLE IF NOT EXISTS project_updates (
+    id VARCHAR(25) PRIMARY KEY NOT NULL,
+    projectId VARCHAR(25) NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    planId VARCHAR(25) NOT NULL REFERENCES daily_plans(id) ON DELETE CASCADE,
+    updateDate DATE NOT NULL,
+    content TEXT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
   -- Create indexes for faster queries
   CREATE INDEX IF NOT EXISTS idx_daily_plans_userId ON daily_plans(userId);
   CREATE INDEX IF NOT EXISTS idx_daily_plans_planDate ON daily_plans(planDate);
@@ -138,6 +162,10 @@ const initSchema = `
   CREATE INDEX IF NOT EXISTS idx_quick_wins_planId ON quick_wins(planId);
   CREATE INDEX IF NOT EXISTS idx_core_memories_userId ON core_memories(userId);
   CREATE INDEX IF NOT EXISTS idx_core_memories_memoryDate ON core_memories(memoryDate);
+  CREATE INDEX IF NOT EXISTS idx_projects_userId ON projects(userId);
+  CREATE INDEX IF NOT EXISTS idx_project_updates_projectId ON project_updates(projectId);
+  CREATE INDEX IF NOT EXISTS idx_project_updates_planId ON project_updates(planId);
+  CREATE INDEX IF NOT EXISTS idx_project_updates_updateDate ON project_updates(updateDate);
 `;
 
 async function initDb() {
@@ -176,6 +204,8 @@ async function initDb() {
         console.log('  - reflections_today');
         console.log('  - focus_tomorrow');
         console.log('  - core_memories');
+        console.log('  - projects');
+        console.log('  - project_updates');
         console.log('✨ All indexes created successfully!');
         console.log('');
         console.log('🎉 Ready to use! Start your app with: npm run dev');

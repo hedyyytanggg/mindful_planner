@@ -16,7 +16,7 @@ export default function AboutPage() {
                     <Card padding="md">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
                         <p className="text-gray-700 leading-relaxed">
-                            We believe that intentional planning leads to meaningful productivity. Mindful Planner is designed to help people structure their days with purpose, balance work with wellness, and build sustainable habits that lead to both achievement and well-being.
+                            We believe that intentional planning leads to meaningful productivity. Mindful Planner is designed to help people structure their days with purpose, balance work with wellness, capture cherished moments, and build sustainable habits that lead to both achievement and well-being.
                         </p>
                     </Card>
 
@@ -88,15 +88,19 @@ export default function AboutPage() {
                         <div className="space-y-2 text-sm text-gray-700">
                             <div className="flex justify-between">
                                 <span>Version:</span>
-                                <span className="font-mono font-semibold">0.1.0 (Beta)</span>
+                                <span className="font-mono font-semibold">0.2.0 (Beta)</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Release Date:</span>
-                                <span>November 25, 2025</span>
+                                <span>December 15, 2025</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Status:</span>
-                                <span className="text-blue-600 font-semibold">MVP - Early Access</span>
+                                <span className="text-blue-600 font-semibold">MVP - In Development</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Latest Features:</span>
+                                <span className="text-purple-600 font-semibold">Core Memories, Date-based Planning</span>
                             </div>
                         </div>
                     </Card>

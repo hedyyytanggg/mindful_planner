@@ -416,6 +416,218 @@ export async function deleteCoreMemory(id: string): Promise<void> {
     }
 }
 
+// ============================================================================
+// PROJECTS & PROJECT UPDATES OPERATIONS
+// ============================================================================
+
+export interface Project {
+    id: string;
+    userId: string;
+    name: string;
+    description: string | null;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ProjectUpdate {
+    id: string;
+    projectId: string;
+    planId: string;
+    updateDate: string;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+    projectName?: string; // For joined queries
+}
+
+// Projects
+export async function createProject(
+    userId: string,
+    name: string,
+    description: string | null
+): Promise<Project> {
+    try {
+        const projectId = generateId();
+        const { rows } = await query<any>(
+            `INSERT INTO projects (id, userid, name, description, isactive, createdat, updatedat)
+             VALUES ($1, $2, $3, $4, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+             RETURNING *`,
+            [projectId, userId, name, description]
+        );
+        return transformProject(rows[0]);
+    } catch (error) {
+        console.error('Error creating project:', error);
+        throw error;
+    }
+}
+
+export async function getProjectsByUser(userId: string, activeOnly: boolean = true): Promise<Project[]> {
+    try {
+        const query_text = activeOnly
+            ? `SELECT * FROM projects WHERE userid = $1 AND isactive = true ORDER BY name`
+            : `SELECT * FROM projects WHERE userid = $1 ORDER BY name`;
+        const { rows } = await query<any>(query_text, [userId]);
+        return rows.map(transformProject);
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        throw error;
+    }
+}
+
+export async function getProjectById(id: string): Promise<Project | null> {
+    try {
+        const { rows } = await query<any>(
+            `SELECT * FROM projects WHERE id = $1`,
+            [id]
+        );
+        return rows[0] ? transformProject(rows[0]) : null;
+    } catch (error) {
+        console.error('Error fetching project:', error);
+        throw error;
+    }
+}
+
+export async function updateProject(
+    id: string,
+    updates: Partial<Pick<Project, 'name' | 'description' | 'isActive'>>
+): Promise<Project> {
+    try {
+        const fields: string[] = [];
+        const values: any[] = [];
+        let paramCount = 1;
+
+        if (updates.name !== undefined) {
+            fields.push(`name = $${paramCount++}`);
+            values.push(updates.name);
+        }
+        if (updates.description !== undefined) {
+            fields.push(`description = $${paramCount++}`);
+            values.push(updates.description);
+        }
+        if (updates.isActive !== undefined) {
+            fields.push(`isactive = $${paramCount++}`);
+            values.push(updates.isActive);
+        }
+
+        if (fields.length === 0) {
+            const existing = await getProjectById(id);
+            if (!existing) throw new Error('Project not found');
+            return existing;
+        }
+
+        fields.push(`updatedat = CURRENT_TIMESTAMP`);
+        values.push(id);
+
+        const { rows } = await query<any>(
+            `UPDATE projects SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+            values
+        );
+        return transformProject(rows[0]);
+    } catch (error) {
+        console.error('Error updating project:', error);
+        throw error;
+    }
+}
+
+export async function deleteProject(id: string): Promise<void> {
+    try {
+        await query(`DELETE FROM projects WHERE id = $1`, [id]);
+    } catch (error) {
+        console.error('Error deleting project:', error);
+        throw error;
+    }
+}
+
+function transformProject(dbRow: any): Project {
+    return {
+        id: dbRow.id,
+        userId: String(dbRow.userid || dbRow.userId || dbRow.user_id || ''),
+        name: dbRow.name,
+        description: dbRow.description,
+        isActive: dbRow.isactive ?? dbRow.isActive ?? true,
+        createdAt: dbRow.createdat || dbRow.createdAt || dbRow.created_at,
+        updatedAt: dbRow.updatedat || dbRow.updatedAt || dbRow.updated_at,
+    };
+}
+
+// Project Updates
+export async function createProjectUpdate(
+    projectId: string,
+    planId: string,
+    updateDate: string,
+    content: string
+): Promise<ProjectUpdate> {
+    try {
+        const updateId = generateId();
+        const { rows } = await query<any>(
+            `INSERT INTO project_updates (id, projectid, planid, updatedate, content, createdat, updatedat)
+             VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+             RETURNING *`,
+            [updateId, projectId, planId, updateDate, content]
+        );
+        return transformProjectUpdate(rows[0]);
+    } catch (error) {
+        console.error('Error creating project update:', error);
+        throw error;
+    }
+}
+
+export async function getProjectUpdatesByPlan(planId: string): Promise<ProjectUpdate[]> {
+    try {
+        const { rows } = await query<any>(
+            `SELECT pu.*, p.name as projectname 
+             FROM project_updates pu
+             LEFT JOIN projects p ON pu.projectid = p.id
+             WHERE pu.planid = $1 
+             ORDER BY pu.createdat DESC`,
+            [planId]
+        );
+        return rows.map(transformProjectUpdate);
+    } catch (error) {
+        console.error('Error fetching project updates:', error);
+        throw error;
+    }
+}
+
+export async function getProjectUpdatesByProject(projectId: string): Promise<ProjectUpdate[]> {
+    try {
+        const { rows } = await query<any>(
+            `SELECT * FROM project_updates WHERE projectid = $1 ORDER BY updatedate DESC, createdat DESC`,
+            [projectId]
+        );
+        return rows.map(transformProjectUpdate);
+    } catch (error) {
+        console.error('Error fetching project updates:', error);
+        throw error;
+    }
+}
+
+export async function deleteProjectUpdate(id: string): Promise<void> {
+    try {
+        await query(`DELETE FROM project_updates WHERE id = $1`, [id]);
+    } catch (error) {
+        console.error('Error deleting project update:', error);
+        throw error;
+    }
+}
+
+function transformProjectUpdate(dbRow: any): ProjectUpdate {
+    const update: ProjectUpdate = {
+        id: dbRow.id,
+        projectId: String(dbRow.projectid || dbRow.projectId || dbRow.project_id || ''),
+        planId: String(dbRow.planid || dbRow.planId || dbRow.plan_id || ''),
+        updateDate: dbRow.updatedate || dbRow.updateDate || dbRow.update_date,
+        content: dbRow.content,
+        createdAt: dbRow.createdat || dbRow.createdAt || dbRow.created_at,
+        updatedAt: dbRow.updatedat || dbRow.updatedAt || dbRow.updated_at,
+    };
+    if (dbRow.projectname || dbRow.projectName || dbRow.project_name) {
+        update.projectName = dbRow.projectname || dbRow.projectName || dbRow.project_name;
+    }
+    return update;
+}
+
 export async function updateDailyPlan(
     userId: string,
     planDate: string,
