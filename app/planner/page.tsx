@@ -402,14 +402,17 @@ export default function PlannerPage() {
             activityId: activity.activityId || null,
             customActivity: activity.customActivity || null,
         };
+        console.log('🔵 Adding recharge activity:', newItem);
         setRecharge([...recharge, newItem]);
     };
 
     const handleUpdateRecharge = (id: string, updates: Partial<RechargeItem>) => {
+        console.log('🔵 Updating recharge activity:', id, updates);
         setRecharge(recharge.map(item => (item.id === id ? { ...item, ...updates } : item)));
     };
 
     const handleDeleteRecharge = (id: string) => {
+        console.log('🔵 Deleting recharge activity:', id);
         setRecharge(recharge.filter(item => item.id !== id));
     };
 

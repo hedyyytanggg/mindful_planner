@@ -17,16 +17,13 @@ export default function AboutPage() {
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Why I Built This</h2>
                         <div className="space-y-4 text-gray-700 leading-relaxed">
                             <p>
-                                I tried them all. <strong>To-do lists</strong> that felt like endless obligation machines. <strong>Time-grid planners</strong> that turned my days into rigid prisons. Both promised productivity, but neither understood what I actually needed.
+                                I tried all the popular planning apps. The endless to-do lists made me anxious. The rigid time-blocking apps felt suffocating. None of them worked for how I actually live.
                             </p>
                             <p>
-                                To-do lists reduced my life to checkboxes—no context, no meaning, just an ever-growing list that made me feel perpetually behind. Time-grid planners sliced my day into tiny blocks, as if I were a factory worker on an assembly line.
+                                So I built something different. Mindful Planner helps you focus on what matters—whether that's crushing a work project, finally learning guitar, or remembering to actually enjoy your coffee break instead of scheduling through it.
                             </p>
                             <p>
-                                <strong>Neither helped me stay focused on what truly mattered. Neither tracked the progress I was actually proud of. Neither captured the moments worth remembering.</strong>
-                            </p>
-                            <p>
-                                So I built Mindful Planner. Not another task manager. Not another calendar grid. A <strong>purpose-driven planning system</strong> for people who want to accomplish meaningful work <em>and</em> live a full life.
+                                It's a planner that gets it. Work is important. But so is taking a walk, calling a friend, and remembering that awesome sunset from last Tuesday. 🌅
                             </p>
                         </div>
                     </Card>
@@ -41,7 +38,7 @@ export default function AboutPage() {
                                     Focus Over Frenzy
                                 </h3>
                                 <p className="text-gray-700 text-sm">
-                                    We don't ask you to manage 47 tasks. We help you identify 1-2 deep work priorities, a handful of quick wins, and one thing you've been avoiding. This isn't about doing everything. It's about doing what matters.
+                                    Instead of managing 47 tasks (who has time for that?), we help you focus on 1-2 big priorities, knock out a few quick wins, and tackle that one thing you keep avoiding. Quality over quantity, friends.
                                 </p>
                             </div>
                             <div>
@@ -50,7 +47,7 @@ export default function AboutPage() {
                                     Progress Over Perfection
                                 </h3>
                                 <p className="text-gray-700 text-sm">
-                                    Life happens beyond work. We give you space to track ongoing projects and hobbies—learning guitar, building a garden, whatever matters to you. Progress on your side project deserves as much attention as your work tasks.
+                                    Learning guitar? Growing succulents? Building that side project? Your personal stuff deserves just as much love as your work tasks. Track it all in one place without feeling guilty.
                                 </p>
                             </div>
                             <div>
@@ -59,7 +56,7 @@ export default function AboutPage() {
                                     Meaning Over Motion
                                 </h3>
                                 <p className="text-gray-700 text-sm">
-                                    Productivity tools forget you're human. We don't. Every day includes recharge activities, little joys, core memories, and reflection. We measure success not just in tasks completed, but in days well-lived.
+                                    You're a whole person with needs beyond just getting things done. We built in space for recharge breaks, capturing little joys, saving memories, and actually reflecting. Success = tasks done + a life you enjoyed living.
                                 </p>
                             </div>
                         </div>
@@ -125,30 +122,26 @@ export default function AboutPage() {
 
                     {/* Who It's For */}
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Who It's For</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Is This For You?</h2>
                         <p className="text-gray-700 mb-4">
-                            Mindful Planner is for people who are tired of planning tools that overwhelm or constrain. If any of these sound like you, you're in the right place:
+                            If any of these sound familiar, welcome home:
                         </p>
                         <div className="space-y-3 text-gray-700 text-sm">
                             <div className="flex gap-2">
                                 <span>→</span>
-                                <p>"I'm always busy but never feel like I'm making progress on what matters"</p>
+                                <p>You're busy AF but can't remember what you accomplished yesterday</p>
                             </div>
                             <div className="flex gap-2">
                                 <span>→</span>
-                                <p>"To-do lists make me anxious, but I need some structure"</p>
+                                <p>To-do lists stress you out, but you still need <em>some</em> structure</p>
                             </div>
                             <div className="flex gap-2">
                                 <span>→</span>
-                                <p>"I keep abandoning my hobbies because I can't track them"</p>
+                                <p>Your hobbies keep getting abandoned because "work stuff"</p>
                             </div>
                             <div className="flex gap-2">
                                 <span>→</span>
-                                <p>"I wish I could remember the good moments, not just the tasks"</p>
-                            </div>
-                            <div className="flex gap-2">
-                                <span>→</span>
-                                <p>"I'm tired of planning tools that treat me like a productivity robot"</p>
+                                <p>You want to remember the good stuff, not just check off tasks</p>
                             </div>
                         </div>
                     </Card>
@@ -178,13 +171,13 @@ export default function AboutPage() {
 
                     {/* Contact */}
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Get in Touch</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">Let's Chat!</h2>
                         <p className="text-gray-700 mb-4">
-                            Have questions, feedback, or just want to share your story? I'd love to hear from you.
+                            Questions? Ideas? Just want to say hi? I'm all ears! 👂
                         </p>
                         <div className="space-y-2 text-sm">
                             <p>
-                                📧 Email: <a href="mailto:hello@mindfulplanner.com" className="text-blue-600 hover:underline">hello@mindfulplanner.com</a>
+                                📧 Email: <a href="mailto:mindfulplanner8@gmail.com" className="text-blue-600 hover:underline">mindfulplanner8@gmail.com</a>
                             </p>
                         </div>
                     </Card>

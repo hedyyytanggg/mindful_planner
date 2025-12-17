@@ -8,7 +8,7 @@ export default function PrivacyPage() {
             <div className="max-w-3xl mx-auto px-6">
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">🔒 Privacy Policy</h1>
-                    <p className="text-gray-600">Last updated: November 25, 2025</p>
+                    <p className="text-gray-600">Last updated: December 17, 2025</p>
                 </div>
 
                 <div className="space-y-6">
@@ -22,13 +22,15 @@ export default function PrivacyPage() {
                     <Card padding="md">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Information We Collect</h2>
                         <div className="space-y-3 text-gray-700">
-                            <p className="font-semibold">We may collect information about you in a variety of ways:</p>
+                            <p className="font-semibold">We collect information about you in the following ways:</p>
                             <ul className="list-disc pl-6 space-y-2">
-                                <li><strong>Personal Data:</strong> Name, email address, timezone preference</li>
-                                <li><strong>Planning Data:</strong> Your daily plans, zones, reflections, and preferences (stored locally)</li>
-                                <li><strong>Usage Data:</strong> How you interact with the app (anonymized)</li>
-                                <li><strong>Device Data:</strong> Device type, browser, IP address</li>
+                                <li><strong>Account Information:</strong> Email address and password (securely hashed)</li>
+                                <li><strong>Planning Data:</strong> Your daily plans across all zones (Deep Work, Quick Wins, Make It Happen, Recharge, Little Joys, Reflections, Focus Tomorrow)</li>
+                                <li><strong>Project Data:</strong> Projects, hobbies, and events you track, plus activity updates</li>
+                                <li><strong>Memory Data:</strong> Core memories you choose to save</li>
+                                <li><strong>Usage Data:</strong> Login sessions and authentication tokens</li>
                             </ul>
+                            <p className="mt-3 text-sm">All planning data is stored securely in our PostgreSQL database and is only accessible to you when logged in.</p>
                         </div>
                     </Card>
 
@@ -46,24 +48,28 @@ export default function PrivacyPage() {
                     </Card>
 
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Local Storage & Data Security</h2>
-                        <p className="text-gray-700 leading-relaxed">
-                            Your daily plans and personal information are primarily stored locally on your device using browser storage. We employ industry-standard security measures including SSL/TLS encryption for data in transit and encryption at rest for any data stored on our servers.
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Data Storage & Security</h2>
+                        <p className="text-gray-700 leading-relaxed mb-3">
+                            Your data is stored securely in our PostgreSQL database with the following protections:
+                        </p>
+                        <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                            <li>Passwords are hashed using SHA256 encryption</li>
+                            <li>All data transmission uses SSL/TLS encryption</li>
+                            <li>Database access is restricted and authenticated</li>
+                            <li>Regular security updates and monitoring</li>
+                        </ul>
+                        <p className="text-gray-700 mt-3">
+                            We employ industry-standard security measures to protect your personal information, but no method of transmission over the internet is 100% secure.
                         </p>
                     </Card>
 
                     <Card padding="md">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Third-Party Services</h2>
                         <p className="text-gray-700 leading-relaxed mb-3">
-                            We may use third-party services to enhance your experience:
+                            We currently do not use third-party analytics or tracking services. Your data stays between you and Mindful Planner.
                         </p>
-                        <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                            <li>Google Analytics (for usage analytics)</li>
-                            <li>Cloud backup providers (optional)</li>
-                            <li>Email service providers</li>
-                        </ul>
-                        <p className="text-gray-700 mt-3">
-                            These services have their own privacy policies, and we encourage you to review them.
+                        <p className="text-gray-700">
+                            If we integrate third-party services in the future (such as payment processing or cloud backups), we will update this policy and notify users.
                         </p>
                     </Card>
 
@@ -80,33 +86,26 @@ export default function PrivacyPage() {
                     </Card>
 
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Cookies & Tracking</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Cookies & Session Management</h2>
                         <p className="text-gray-700 leading-relaxed">
-                            We use cookies and similar tracking technologies to enhance your experience. Most browsers allow you to control cookies through settings. We use both session and persistent cookies for functionality and analytics.
+                            We use session cookies to keep you logged in and ensure secure authentication. These are essential for the service to function. We do not use tracking cookies or third-party advertising cookies.
                         </p>
                     </Card>
 
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Children's Privacy</h2>
-                        <p className="text-gray-700 leading-relaxed">
-                            Our service is not directed to children under 13. We do not knowingly collect personal information from children. If we become aware that we have collected such information, we take steps to delete such information.
-                        </p>
-                    </Card>
-
-                    <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Changes to This Policy</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Changes to This Policy</h2>
                         <p className="text-gray-700 leading-relaxed">
                             We may update this Privacy Policy from time to time. We will notify you of significant changes by posting the new policy with an updated revision date.
                         </p>
                     </Card>
 
                     <Card padding="md">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Contact Us</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Contact Us</h2>
                         <p className="text-gray-700 leading-relaxed">
                             If you have questions about this Privacy Policy or our privacy practices, please contact us at:
                         </p>
                         <p className="text-gray-700 mt-3">
-                            📧 <a href="mailto:privacy@mindfulplanner.com" className="text-blue-600 hover:underline">privacy@mindfulplanner.com</a>
+                            📧 <a href="mailto:mindfulplanner8@gmail.com" className="text-blue-600 hover:underline">mindfulplanner8@gmail.com</a>
                         </p>
                     </Card>
                 </div>

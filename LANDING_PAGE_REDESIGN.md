@@ -223,23 +223,7 @@ The landing page is the first touchpoint for potential users. It must communicat
 
 ---
 
-#### 10. **Pricing / Access**
-**Goal:** Remove friction to start  
-**Content:**
-- Headline: "Start Planning for Free"
-- Pricing tiers (if applicable):
-  - **Free** - Full access to all features
-  - **Premium** (future) - Advanced analytics, team features
-- CTA: "Get Started Now"
-
-**Design Notes:**
-- Clean pricing cards
-- Emphasize "Free" tier
-- Remove barriers (no credit card required)
-
----
-
-#### 11. **Final CTA Section**
+#### 10. **Final CTA Section**
 **Goal:** Convert hesitant visitors  
 **Content:**
 - Headline: "Ready to Plan with Purpose?"
@@ -254,10 +238,10 @@ The landing page is the first touchpoint for potential users. It must communicat
 
 ---
 
-#### 12. **Footer**
+#### 11. **Footer**
 **Goal:** Navigation and trust  
 **Content:**
-- Links: Features, About, Pricing, Contact, Privacy, Terms
+- Links: Features, About, Contact, Privacy, Terms
 - Social links (if applicable)
 - Copyright
 - Optional: Newsletter signup
@@ -429,8 +413,7 @@ The landing page is the first touchpoint for potential users. It must communicat
 1. **Do we have user testimonials yet?** If not, can we run a beta program to collect them?
 2. **What's our acquisition channel?** Organic search, social media, word-of-mouth?
 3. **Should we create a demo video?** (Highly recommended—video converts 80% better)
-4. **Pricing strategy:** Will we always be free, or introduce premium tier?
-5. **Analytics:** Do we need basic, privacy-friendly analytics (Plausible, Fathom)?
+4. **Analytics:** Do we need basic, privacy-friendly analytics (Plausible, Fathom)?
 
 ---
 

@@ -123,13 +123,22 @@ export async function getDailyPlan(
         deep_work: deepWorkRes.rows,
         quick_wins: quickWinsRes.rows,
         make_it_happen: makeItHappenRes.rows[0] || null,
-        recharge_zone: rechargeZonesRes.rows,
-        little_joys: littleJoysRes.rows.map(r => r.content),
+        recharge_zone: rechargeZonesRes.rows.map(r => ({
+            id: r.id,
+            activityId: r.activityid || r.activityId,
+            customActivity: r.customactivity || r.customActivity,
+            completed: r.completed,
+            createdAt: r.createdat || r.createdAt,
+            updatedAt: r.updatedat || r.updatedAt,
+        })),
+        little_joys: littleJoysRes.rows.map(r => r.joy || r.content),
         reflection: reflectionRes.rows[0]?.content || null,
         focus_tomorrow: focusRes.rows[0]?.content || null,
         createdAt: plan.createdAt,
         updatedAt: plan.updatedAt,
     };
+
+    console.log('📊 Loaded plan with recharge_zone:', completePlan.recharge_zone);
 
     return completePlan;
 }
@@ -563,7 +572,9 @@ export async function createProjectUpdate(
         const { rows } = await query<any>(
             `INSERT INTO project_updates (id, projectid, planid, updatedate, content, createdat, updatedat)
              VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-             RETURNING *`,
+             RETURNING 
+                project_updates.*,
+                (SELECT name FROM projects WHERE id = $2) as projectname`,
             [updateId, projectId, planId, updateDate, content]
         );
         return transformProjectUpdate(rows[0]);

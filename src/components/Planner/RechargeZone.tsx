@@ -6,11 +6,11 @@ import { useState } from 'react';
 const RECHARGE_ACTIVITIES = [
     { emoji: '🚶', id: 'Take a Walk', description: 'Get fresh air and move' },
     { emoji: '🧘', id: 'Meditate', description: '5-10 min meditation' },
-    { emoji: '☕', id: 'Coffee Break', description: 'Enjoy a beverage' },
+    { emoji: '🍎', id: 'Snack Break', description: 'Enjoy a beverage or snack' },
     { emoji: '🎵', id: 'Listen to Music', description: 'Your favorite songs' },
-    { emoji: '📞', id: 'Call a Friend', description: 'Connect with someone' },
-    { emoji: '🎮', id: 'Play', description: 'A quick game or hobby' },
-    { emoji: '🍎', id: 'Snack', description: 'Eat something healthy' },
+    { emoji: '📞', id: 'Talk to a Friend', description: 'Connect with someone' },
+    { emoji: '🎮', id: 'Entertain', description: 'A quick game or hobby' },
+    { emoji: '🛌', id: 'Rest', description: 'Take a short break' },
     { emoji: '🪟', id: 'Look Outside', description: 'Notice nature' },
 ];
 
@@ -39,10 +39,8 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete, disabled =
         if (disabled) return;
         const existing = items?.find(item => item.activityId === activityId);
         if (existing) {
-            // Toggle completion
             onUpdate(existing.id, { completed: !existing.completed });
         } else {
-            // Add new activity
             onAdd({ activityId, completed: true });
         }
     };
@@ -76,19 +74,13 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete, disabled =
                         <button
                             key={activity.id}
                             onClick={() => handleActivityClick(activity.id)}
-                            aria-label={`Mark ${activity.id} as ${isCompleted ? 'incomplete' : 'complete'}`}
-                            aria-pressed={isCompleted}
-                            className={`p-3 text-left rounded-lg transition-all duration-200 transform focus:outline-none focus:ring-2 focus:ring-blue-500 ${isCompleted
-                                ? 'bg-green-100 ring-2 ring-green-400 scale-105'
-                                : 'bg-blue-50 hover:bg-blue-100 active:scale-95'
-                                }`}
+                            disabled={disabled}
+                            className={`p-3 text-left rounded-lg transition-all duration-200 ${isCompleted
+                                ? 'bg-green-100 ring-2 ring-green-400'
+                                : 'bg-blue-50 hover:bg-blue-100'
+                                } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            <div
-                                className={`text-2xl mb-1 transition-transform ${isCompleted ? 'scale-110' : ''}`}
-                                aria-hidden="true"
-                            >
-                                {activity.emoji}
-                            </div>
+                            <div className="text-2xl mb-1">{activity.emoji}</div>
                             <p className={`text-sm font-medium ${isCompleted ? 'text-green-700' : 'text-gray-900'}`}>
                                 {activity.id}
                             </p>
@@ -106,60 +98,26 @@ export function RechargeZone({ items = [], onAdd, onUpdate, onDelete, disabled =
                 .map(item => (
                     <div
                         key={item.id}
-                        className={`p-3 mb-2 rounded-lg flex items-center justify-between ${item.completed
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-700'
+                        className={`p-3 mb-2 rounded-lg flex items-center justify-between ${item.completed ? 'bg-green-100' : 'bg-gray-100'
                             }`}
                     >
                         <div className="flex items-center gap-2">
                             <input
                                 type="checkbox"
                                 checked={item.completed}
-                                onChange={() => onUpdate(item.id, { completed: !item.completed })}
+                                onChange={() => !disabled && onUpdate(item.id, { completed: !item.completed })}
+                                disabled={disabled}
                                 className="w-4 h-4"
                             />
                             <span className="text-sm">{item.customActivity}</span>
                         </div>
-                        {onDelete && (
-                            <button
-                                onClick={() => onDelete(item.id)}
-                                className="text-xs text-red-500 hover:text-red-700"
-                            >
+                        {onDelete && !disabled && (
+                            <button onClick={() => onDelete(item.id)} className="text-xs text-red-500 hover:text-red-700">
                                 ✕
                             </button>
                         )}
                     </div>
                 ))}
-
-            {/* Add Custom Activity */}
-            {showCustomInput ? (
-                <div className="flex gap-2">
-                    <Input
-                        type="text"
-                        placeholder="Custom recharge activity..."
-                        value={customActivity}
-                        onChange={(e) => setCustomActivity(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleAddCustom();
-                            if (e.key === 'Escape') {
-                                setShowCustomInput(false);
-                                setCustomActivity('');
-                            }
-                        }}
-                        autoFocus
-                    />
-                    <Button onClick={handleAddCustom} variant="primary" size="sm">
-                        Add
-                    </Button>
-                </div>
-            ) : (
-                <button
-                    onClick={() => setShowCustomInput(true)}
-                    className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
-                >
-                    + Add Custom Activity
-                </button>
-            )}
         </Card>
     );
 }

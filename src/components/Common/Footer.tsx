@@ -37,16 +37,6 @@ export function Footer() {
                                     Features
                                 </Link>
                             </li>
-                            <li>
-                                <Link href="/pricing" className="hover:text-blue-400 transition">
-                                    Pricing
-                                </Link>
-                            </li>
-                            <li>
-                                <a href="#blog" className="hover:text-blue-400 transition">
-                                    Blog
-                                </a>
-                            </li>
                         </ul>
                     </div>
 
@@ -60,19 +50,9 @@ export function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <a href="#careers" className="hover:text-blue-400 transition">
-                                    Careers
-                                </a>
-                            </li>
-                            <li>
                                 <Link href="/contact" className="hover:text-blue-400 transition">
                                     Contact
                                 </Link>
-                            </li>
-                            <li>
-                                <a href="#press" className="hover:text-blue-400 transition">
-                                    Press Kit
-                                </a>
                             </li>
                         </ul>
                     </div>
@@ -90,16 +70,6 @@ export function Footer() {
                                 <Link href="/terms" className="hover:text-blue-400 transition">
                                     Terms of Service
                                 </Link>
-                            </li>
-                            <li>
-                                <a href="#cookies" className="hover:text-blue-400 transition">
-                                    Cookie Policy
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#status" className="hover:text-blue-400 transition">
-                                    Status
-                                </a>
                             </li>
                         </ul>
                     </div>

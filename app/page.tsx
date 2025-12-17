@@ -28,7 +28,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <p className="text-sm text-gray-500">Free • No credit card required • Your data stays private</p>
+          <p className="text-sm text-gray-500">Free during beta • No credit card required • Your data stays private</p>
         </div>
       </section>
 
@@ -360,7 +360,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <p className="text-sm mt-6 opacity-75">No credit card required • Free forever</p>
+          <p className="text-sm mt-6 opacity-75">Free early access • No credit card required</p>
         </div>
       </section>
     </div>
