@@ -5,6 +5,9 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/Common';
 
+// Note: metadata export only works in Server Components
+// Since this is a Client Component, add metadata in a layout.tsx wrapper if needed
+
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState('');

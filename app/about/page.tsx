@@ -1,6 +1,21 @@
-'use client';
-
+import { Metadata } from 'next'
 import { Card } from '@/components/Common';
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+
+export const metadata: Metadata = {
+    title: 'About Us — The Story Behind Mindful Planner',
+    description: 'Discover why we built Mindful Planner differently. A daily planning app that balances productivity with well-being, created for real people living real lives.',
+    openGraph: {
+        title: 'About Us — The Story Behind Mindful Planner',
+        description: 'Learn about our philosophy: Focus over frenzy, progress over perfection, and wellbeing without guilt.',
+        url: `${baseUrl}/about`,
+        type: 'website',
+    },
+    alternates: {
+        canonical: `${baseUrl}/about`,
+    },
+}
 
 export default function AboutPage() {
     return (

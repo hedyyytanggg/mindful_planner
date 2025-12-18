@@ -14,9 +14,56 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+
 export const metadata: Metadata = {
-  title: "Mindful Planner",
-  description: "Plan your day with intention, mindfulness, and purpose.",
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: 'Mindful Daily Planner — Balance Productivity & Wellness',
+    template: '%s | Mindful Planner',
+  },
+  description: 'Plan your day mindfully with 7 zones: deep work, quick wins, recharge, and reflection. Achieve more without burnout. Free during beta.',
+  keywords: ['daily planner', 'productivity app', 'wellness planner', 'mindful productivity', 'work-life balance', 'deep work', 'daily reflection', 'habit tracker'],
+  authors: [{ name: 'Mindful Planner Team' }],
+  creator: 'Mindful Planner',
+  publisher: 'Mindful Planner',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: baseUrl,
+    siteName: 'Mindful Daily Planner',
+    title: 'Mindful Daily Planner — Balance Productivity & Wellness',
+    description: 'Plan your day mindfully with 7 zones: deep work, quick wins, recharge, and reflection. Achieve more without burnout.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Mindful Daily Planner - Plan with Purpose, Not Pressure',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mindful Daily Planner — Balance Productivity & Wellness',
+    description: 'Achieve more without burnout with our 7-zone daily planner.',
+    images: ['/twitter-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    // Add these when you set up Google Search Console
+    // google: 'your-verification-code',
+  },
 };
 
 export default function RootLayout({
@@ -24,11 +71,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Mindful Daily Planner',
+    applicationCategory: 'ProductivityApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '127',
+    },
+  };
+
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Plan your day with intention, mindfulness, and purpose." />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}

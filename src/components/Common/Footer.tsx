@@ -77,22 +77,6 @@ export function Footer() {
 
                 {/* Divider */}
                 <div className="border-t border-gray-800 pt-8">
-                    {/* Social Links */}
-                    <div className="flex justify-center gap-6 mb-6">
-                        <a href="#twitter" className="text-gray-400 hover:text-blue-400 transition text-sm font-medium">
-                            Twitter
-                        </a>
-                        <a href="#github" className="text-gray-400 hover:text-blue-400 transition text-sm font-medium">
-                            GitHub
-                        </a>
-                        <a href="#linkedin" className="text-gray-400 hover:text-blue-400 transition text-sm font-medium">
-                            LinkedIn
-                        </a>
-                        <a href="#instagram" className="text-gray-400 hover:text-blue-400 transition text-sm font-medium">
-                            Instagram
-                        </a>
-                    </div>
-
                     {/* Copyright */}
                     <div className="text-center text-sm text-gray-500">
                         <p>

@@ -57,6 +57,13 @@ Choose based on what you want to do:
 | [**POSTGRES_SETUP_SUMMARY.md**](POSTGRES_SETUP_SUMMARY.md) | Summary of PostgreSQL configuration | Developers |
 | [**POSTGRES_IMPLEMENTATION.md**](POSTGRES_IMPLEMENTATION.md) | Implementation details of PostgreSQL integration | Developers |
 
+### 🔍 SEO & Marketing
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [**SEO_BEST_PRACTICES.md**](SEO_BEST_PRACTICES.md) | Comprehensive SEO strategy and implementation guide | Marketing/Developers |
+| [**SEO_QUICK_REFERENCE.md**](SEO_QUICK_REFERENCE.md) | Quick SEO reference and common tasks | Developers |
+| [**SEO_IMPLEMENTATION_CHECKLIST.md**](SEO_IMPLEMENTATION_CHECKLIST.md) | Track SEO implementation progress | Marketing/Developers |
+
 ### ♿ Accessibility & Compliance
 | Document | Purpose | Audience |
 |----------|---------|----------|

@@ -100,12 +100,12 @@ const authOptions: NextAuthOptions = {
                         // Check if this is a legacy SHA256 password that needs migration
                         if (isSHA256Hash(user.password)) {
                             console.log(`🔍 Detected SHA256 password for user ${user.email}`);
-                            
+
                             // Verify with legacy SHA256
                             if (!verifySHA256Password(credentials.password, user.password)) {
                                 throw new Error("Invalid email or password");
                             }
-                            
+
                             // Password is correct - migrate to bcrypt
                             try {
                                 await migratePasswordToBcrypt(user.id, user.email, credentials.password);
@@ -113,7 +113,7 @@ const authOptions: NextAuthOptions = {
                                 console.error('⚠️ Password migration failed, but allowing login:', migrationError);
                                 // Continue with login even if migration fails - user can still access account
                             }
-                            
+
                             return {
                                 id: user.id.toString(),
                                 email: user.email,
@@ -169,8 +169,8 @@ const authOptions: NextAuthOptions = {
     },
     cookies: {
         sessionToken: {
-            name: process.env.NODE_ENV === 'production' 
-                ? '__Secure-next-auth.session-token' 
+            name: process.env.NODE_ENV === 'production'
+                ? '__Secure-next-auth.session-token'
                 : 'next-auth.session-token',
             options: {
                 httpOnly: true,

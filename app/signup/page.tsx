@@ -15,13 +15,13 @@ export default function SignupPage() {
 
     const validatePassword = (pwd: string): { valid: boolean; errors: string[] } => {
         const errors: string[] = [];
-        
+
         if (pwd.length < 12) errors.push('At least 12 characters');
         if (!/[a-z]/.test(pwd)) errors.push('One lowercase letter');
         if (!/[A-Z]/.test(pwd)) errors.push('One uppercase letter');
         if (!/\d/.test(pwd)) errors.push('One number');
         if (!/[@$!%*?&#]/.test(pwd)) errors.push('One special character (@$!%*?&#)');
-        
+
         return { valid: errors.length === 0, errors };
     };
 

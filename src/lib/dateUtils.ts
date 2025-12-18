@@ -19,7 +19,7 @@ export function getTodayInLocalTimezone(): string {
  */
 export function getFormattedDate(dateString?: string): string {
     const date = dateString ? new Date(dateString + 'T00:00:00') : new Date();
-    
+
     return date.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -33,7 +33,7 @@ export function getFormattedDate(dateString?: string): string {
  */
 export function getCurrentDateTimeInfo() {
     const now = new Date();
-    
+
     return {
         date: getTodayInLocalTimezone(),
         formattedDate: getFormattedDate(),

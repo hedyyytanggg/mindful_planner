@@ -62,7 +62,7 @@ async function testMigration() {
             'SELECT id, email, password FROM users WHERE email = $1',
             [testEmail]
         );
-        
+
         if (beforeResult.rows.length === 0) {
             throw new Error('Test user not found!');
         }
@@ -121,7 +121,7 @@ async function testMigration() {
 
     } catch (error) {
         console.error('\n❌ Test failed:', error.message);
-        
+
         // Cleanup on error
         try {
             await pool.query('DELETE FROM users WHERE email = $1', [testEmail]);
