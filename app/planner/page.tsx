@@ -13,6 +13,7 @@ import { FocusTomorrow } from '@/components/Planner/FocusTomorrow';
 import { CoreMemories } from '@/components/Planner/CoreMemories';
 import { ProjectUpdates } from '@/components/Planner/ProjectUpdates';
 import { Button } from '@/components/Common';
+import { getTodayInLocalTimezone, getFormattedDate, getCurrentDateTimeInfo } from '@/lib/dateUtils';
 
 interface DeepWorkItem {
     id: string;
@@ -121,7 +122,7 @@ export default function PlannerPage() {
     useEffect(() => {
         if (authStatus === 'loading') return;
 
-        const today = new Date().toISOString().split('T')[0];
+        const today = getTodayInLocalTimezone();
         setCurrentDate(today);
         setIsReadOnly(isDateReadOnly(today));
         loadPlanForDate(today);
@@ -313,14 +314,13 @@ export default function PlannerPage() {
 
     // Check if next day button should be disabled
     const isNextDayDisabled = () => {
-        const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        const todayStr = getTodayInLocalTimezone();
         return currentDate >= todayStr;
     };
 
     // Navigate to today
     const goToToday = () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getTodayInLocalTimezone();
         handleDateChange(today);
     };
 
@@ -660,11 +660,10 @@ export default function PlannerPage() {
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900">🧘 Your Daily Plan</h1>
                             <p className="text-sm text-gray-600">
-                                {currentDate && (() => {
-                                    const [year, month, day] = currentDate.split('-').map(Number);
-                                    const date = new Date(year, month - 1, day);
-                                    return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                                })()}
+                                {currentDate && getFormattedDate(currentDate)}
+                                <span className="ml-2 text-gray-500">
+                                    ({Intl.DateTimeFormat().resolvedOptions().timeZone})
+                                </span>
                                 {isSaving && <span className="ml-2 text-blue-600">💾 Saving...</span>}
                                 {!isSaving && userId && <span className="ml-2 text-green-600">✓ Synced</span>}
                                 {!userId && <span className="ml-2 text-gray-500">📱 Local only</span>}
@@ -692,7 +691,7 @@ export default function PlannerPage() {
                             type="date"
                             value={currentDate}
                             min={getMinDate()}
-                            max={new Date().toISOString().split('T')[0]}
+                            max={getTodayInLocalTimezone()}
                             onChange={(e) => handleDateChange(e.target.value)}
                             className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             aria-label="Select a date"

@@ -13,6 +13,18 @@ export default function SignupPage() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const validatePassword = (pwd: string): { valid: boolean; errors: string[] } => {
+        const errors: string[] = [];
+        
+        if (pwd.length < 12) errors.push('At least 12 characters');
+        if (!/[a-z]/.test(pwd)) errors.push('One lowercase letter');
+        if (!/[A-Z]/.test(pwd)) errors.push('One uppercase letter');
+        if (!/\d/.test(pwd)) errors.push('One number');
+        if (!/[@$!%*?&#]/.test(pwd)) errors.push('One special character (@$!%*?&#)');
+        
+        return { valid: errors.length === 0, errors };
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
@@ -23,8 +35,9 @@ export default function SignupPage() {
             return;
         }
 
-        if (password.length < 6) {
-            setError('Password must be at least 6 characters');
+        const passwordValidation = validatePassword(password);
+        if (!passwordValidation.valid) {
+            setError(`Password must contain: ${passwordValidation.errors.join(', ')}`);
             return;
         }
 
@@ -108,6 +121,9 @@ export default function SignupPage() {
                                 required
                                 disabled={isLoading}
                             />
+                            <p className="mt-1 text-xs text-gray-500">
+                                Min 12 characters with uppercase, lowercase, number, and special character
+                            </p>
                         </div>
 
                         <div>

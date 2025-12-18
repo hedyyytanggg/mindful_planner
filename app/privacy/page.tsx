@@ -53,9 +53,11 @@ export default function PrivacyPage() {
                             Your data is stored securely in our PostgreSQL database with the following protections:
                         </p>
                         <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                            <li>Passwords are hashed using SHA256 encryption</li>
+                            <li>Passwords are hashed using bcrypt with salt rounds (industry standard)</li>
                             <li>All data transmission uses SSL/TLS encryption</li>
+                            <li>Session tokens expire after 24 hours for security</li>
                             <li>Database access is restricted and authenticated</li>
+                            <li>Security headers protect against common web vulnerabilities</li>
                             <li>Regular security updates and monitoring</li>
                         </ul>
                         <p className="text-gray-700 mt-3">

@@ -70,6 +70,21 @@ export async function getUserById(id: string): Promise<User | null> {
     return rows[0] || null;
 }
 
+export async function updateUserPassword(
+    userId: string,
+    newPasswordHash: string
+): Promise<void> {
+    try {
+        await query(
+            'UPDATE users SET password = $1, updatedAt = CURRENT_TIMESTAMP WHERE id = $2',
+            [newPasswordHash, userId]
+        );
+    } catch (error) {
+        console.error('Error updating user password:', error);
+        throw error;
+    }
+}
+
 // ============================================================================
 // DAILY PLAN OPERATIONS
 // ============================================================================
