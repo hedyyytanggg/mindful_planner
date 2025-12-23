@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import { Card, Textarea, Button } from '@/components/Common';
 
 interface FocusTomorrowProps {
@@ -12,6 +12,7 @@ interface FocusTomorrowProps {
 export function FocusTomorrow({ content, onSave, disabled = false }: FocusTomorrowProps) {
     const [isEditing, setIsEditing] = useState(!content);
     const [text, setText] = useState(content || '');
+    const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Sync internal state when content prop changes
     useEffect(() => {
@@ -19,9 +20,38 @@ export function FocusTomorrow({ content, onSave, disabled = false }: FocusTomorr
         setIsEditing(!content);
     }, [content]);
 
+    // Auto-save when text changes (with debounce)
+    useEffect(() => {
+        if (disabled) return;
+
+        // Clear existing timer
+        if (autoSaveTimerRef.current) {
+            clearTimeout(autoSaveTimerRef.current);
+        }
+
+        // Set new timer for auto-save
+        autoSaveTimerRef.current = setTimeout(() => {
+            const trimmedText = text.trim() || null;
+            // Only save if different from current content
+            if (trimmedText !== content) {
+                onSave(trimmedText);
+                console.log('✅ Auto-saved Focus for Tomorrow');
+            }
+        }, 2000); // Auto-save 2 seconds after typing stops
+
+        return () => {
+            if (autoSaveTimerRef.current) {
+                clearTimeout(autoSaveTimerRef.current);
+            }
+        };
+    }, [text, content, onSave, disabled]);
+
     const handleSave = () => {
-        onSave(text.trim() || null);
-        setIsEditing(false);
+        const trimmedText = text.trim() || null;
+        onSave(trimmedText);
+        if (trimmedText) {
+            setIsEditing(false);
+        }
     };
 
     return (
