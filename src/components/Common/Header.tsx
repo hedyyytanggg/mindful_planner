@@ -45,6 +45,14 @@ export function Header() {
                         </Link>
 
                         <Link
+                            href="/timeline"
+                            className={navLinkClass('/timeline')}
+                            aria-current={isActive('/timeline') ? 'page' : undefined}
+                        >
+                            <span aria-hidden="true">📜</span> Timeline
+                        </Link>
+
+                        <Link
                             href="/features"
                             className={navLinkClass('/features')}
                             aria-current={isActive('/features') ? 'page' : undefined}
@@ -164,6 +172,18 @@ export function Header() {
                                 aria-current={isActive('/planner') ? 'page' : undefined}
                             >
                                 <span aria-hidden="true">📅</span> Planner
+                            </Link>
+
+                            <Link
+                                href="/timeline"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/timeline')
+                                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                onClick={() => setShowMobileMenu(false)}
+                                aria-current={isActive('/timeline') ? 'page' : undefined}
+                            >
+                                <span aria-hidden="true">📜</span> Timeline
                             </Link>
 
                             <Link

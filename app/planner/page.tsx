@@ -122,10 +122,14 @@ export default function PlannerPage() {
     useEffect(() => {
         if (authStatus === 'loading') return;
 
-        const today = getTodayInLocalTimezone();
-        setCurrentDate(today);
-        setIsReadOnly(isDateReadOnly(today));
-        loadPlanForDate(today);
+        // Check if there's a date in the URL query params
+        const urlParams = new URLSearchParams(window.location.search);
+        const dateParam = urlParams.get('date');
+
+        const initialDate = dateParam || getTodayInLocalTimezone();
+        setCurrentDate(initialDate);
+        setIsReadOnly(isDateReadOnly(initialDate));
+        loadPlanForDate(initialDate);
         loadProjects();
         setIsLoading(false);
     }, [authStatus, userId]);
