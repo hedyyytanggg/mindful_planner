@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Planner - OG Image Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .instructions {
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* OG Image - Option 1: Gradient with 7 Zones */
+        .og-image-1 {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .og-image-1::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .og-image-1 .content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+        }
+
+        .og-image-1 h1 {
+            font-size: 72px;
+            font-weight: 800;
+            margin: 0 0 20px 0;
+            line-height: 1.1;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .og-image-1 .tagline {
+            font-size: 36px;
+            font-weight: 400;
+            margin: 0 0 40px 0;
+            opacity: 0.95;
+        }
+
+        .og-image-1 .features {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 900px;
+        }
+
+        .og-image-1 .feature {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        /* OG Image - Option 2: Clean Minimal */
+        .og-image-2 {
+            width: 1200px;
+            height: 630px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            box-sizing: border-box;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .og-image-2 .icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+        }
+
+        .og-image-2 h1 {
+            font-size: 68px;
+            font-weight: 800;
+            margin: 0 0 20px 0;
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .og-image-2 .tagline {
+            font-size: 32px;
+            color: #6B7280;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .og-image-2 .bottom-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%);
+        }
+
+        /* OG Image - Option 3: With Screenshot Preview */
+        .og-image-3 {
+            width: 1200px;
+            height: 630px;
+            background: #F9FAFB;
+            display: flex;
+            padding: 60px;
+            box-sizing: border-box;
+            position: relative;
+            margin-bottom: 40px;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .og-image-3 .left {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .og-image-3 h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin: 0 0 20px 0;
+            color: #111827;
+            line-height: 1.1;
+        }
+
+        .og-image-3 .tagline {
+            font-size: 28px;
+            color: #6B7280;
+            margin: 0 0 30px 0;
+            line-height: 1.4;
+        }
+
+        .og-image-3 .badges {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .og-image-3 .badge {
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .og-image-3 .right {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E5E7EB;
+        }
+
+        .og-image-3 .zone {
+            margin-bottom: 20px;
+        }
+
+        .og-image-3 .zone-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .og-image-3 .zone-emoji {
+            font-size: 24px;
+        }
+
+        .og-image-3 .zone-item {
+            background: #F3F4F6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #6B7280;
+            margin-bottom: 6px;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .download-btn:hover {
+            opacity: 0.9;
+        }
+
+        h2 {
+            margin-top: 40px;
+            color: #111827;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="instructions">
+        <h1>🎨 OG Image Generator for Mindful Planner</h1>
+        <p><strong>Instructions:</strong></p>
+        <ol>
+            <li>Scroll down and pick your favorite design (Option 1, 2, or 3)</li>
+            <li>Right-click on the image → "Save image as..." or take a screenshot</li>
+            <li>Use browser zoom to ensure exactly 1200×630 pixels, or crop in any image editor</li>
+            <li>Save as <code>/public/og-image.png</code> in your project</li>
+            <li>For Twitter, you can use the same image or resize to 1200×600</li>
+        </ol>
+        <p><strong>Pro tip:</strong> Use a screenshot tool like Cleanshot (Mac) or Snipping Tool (Windows) for precise
+            dimensions.</p>
+    </div>
+
+    <div class="container">
+        <h2>Option 1: Gradient with Features (Bold & Modern)</h2>
+        <div class="og-image-1" id="og-1">
+            <div class="content">
+                <h1>Plan Your Day with<br>Purpose, Not Pressure</h1>
+                <div class="tagline">Mindful Daily Planner</div>
+                <div class="features">
+                    <div class="feature">🎯 Deep Work</div>
+                    <div class="feature">⚡ Quick Wins</div>
+                    <div class="feature">🔋 Recharge</div>
+                    <div class="feature">💝 Little Joys</div>
+                    <div class="feature">🌟 Reflection</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Option 2: Clean Minimal (Professional)</h2>
+        <div class="og-image-2" id="og-2">
+            <div class="icon">🧘</div>
+            <h1>Mindful Daily Planner</h1>
+            <div class="tagline">Plan with Purpose, Not Pressure</div>
+            <div class="bottom-line"></div>
+        </div>
+
+        <h2>Option 3: Split Layout with Preview (Detailed)</h2>
+        <div class="og-image-3" id="og-3">
+            <div class="left">
+                <h1>Mindful Daily Planner</h1>
+                <div class="tagline">Balance productivity with wellbeing</div>
+                <div class="badges">
+                    <div class="badge">No Ads</div>
+                    <div class="badge">Privacy-First</div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="zone">
+                    <div class="zone-title">
+                        <span class="zone-emoji">🎯</span>
+                        Deep Work Zone
+                    </div>
+                </div>
+                <div class="zone">
+                    <div class="zone-title">
+                        <span class="zone-emoji">⚡</span>
+                        Quick Wins
+                    </div>
+                </div>
+                <div class="zone">
+                    <div class="zone-title">
+                        <span class="zone-emoji">🔋</span>
+                        Recharge Zone
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add download buttons
+        const images = document.querySelectorAll('[id^="og-"]');
+        images.forEach((img, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'download-btn';
+            btn.textContent = `Save Option ${index + 1} as Image`;
+            btn.onclick = () => {
+                alert('Right-click on the image above and select "Save image as..." or use your screenshot tool to capture exactly 1200×630 pixels.');
+            };
+            img.parentElement.appendChild(btn);
+        });
+    </script>
+</body>
+
+</html>
