@@ -629,14 +629,14 @@ export default function PlannerPage() {
         <div className="bg-gradient-to-b from-blue-50 to-gray-50 min-h-screen">
             {/* Authentication and Status Check */}
             {authStatus === 'loading' && (
-                <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
-                    <p className="text-center text-sm text-blue-700">⏳ Loading your session...</p>
+                <div className="bg-blue-50 border-b border-blue-200 px-4 sm:px-6 py-3">
+                    <p className="text-center text-xs sm:text-sm text-blue-700">⏳ Loading your session...</p>
                 </div>
             )}
 
             {authStatus === 'unauthenticated' && (
-                <div className="bg-yellow-50 border-b border-yellow-200 px-6 py-3">
-                    <p className="text-center text-sm text-yellow-700">
+                <div className="bg-yellow-50 border-b border-yellow-200 px-4 sm:px-6 py-3">
+                    <p className="text-center text-xs sm:text-sm text-yellow-700">
                         📝 Not signed in. Data will be saved locally only.{' '}
                         <a href="/login" className="font-semibold text-yellow-900 hover:text-yellow-800 underline">
                             Sign in here
@@ -646,27 +646,29 @@ export default function PlannerPage() {
             )}
 
             {saveError && (
-                <div className="bg-red-50 border-b border-red-200 px-6 py-3">
-                    <p className="text-center text-sm text-red-700">
+                <div className="bg-red-50 border-b border-red-200 px-4 sm:px-6 py-3">
+                    <p className="text-center text-xs sm:text-sm text-red-700">
                         ⚠️ {saveError}
                     </p>
                 </div>
             )}
 
             {/* Planner Subheader */}
-            <div className="bg-white shadow-sm border-b border-gray-200 sticky top-16 z-10">
-                <div className="max-w-6xl mx-auto px-6 py-6">
-                    <div className="flex justify-between items-center mb-4">
+            <div className="bg-white shadow-sm border-b border-gray-200 sticky top-14 sm:top-16 z-10">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+                    <div className="flex justify-between items-start sm:items-center mb-3 sm:mb-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">🧘 Your Daily Plan</h1>
-                            <p className="text-sm text-gray-600">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">🧘 Your Daily Plan</h1>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-1">
                                 {currentDate && getFormattedDate(currentDate)}
-                                <span className="ml-2 text-gray-500">
+                                <span className="hidden sm:inline ml-2 text-gray-500">
                                     ({Intl.DateTimeFormat().resolvedOptions().timeZone})
                                 </span>
-                                {isSaving && <span className="ml-2 text-blue-600">💾 Saving...</span>}
-                                {!isSaving && userId && <span className="ml-2 text-green-600">✓ Synced</span>}
-                                {!userId && <span className="ml-2 text-gray-500">📱 Local only</span>}
+                                <span className="block sm:inline mt-1 sm:mt-0">
+                                    {isSaving && <span className="sm:ml-2 text-blue-600">💾 Saving...</span>}
+                                    {!isSaving && userId && <span className="sm:ml-2 text-green-600">✓ Synced</span>}
+                                    {!userId && <span className="sm:ml-2 text-gray-500">📱 Local only</span>}
+                                </span>
                             </p>
                         </div>
                         {/* Export button - hidden for now
@@ -677,40 +679,46 @@ export default function PlannerPage() {
                     </div>
 
                     {/* Date Navigation */}
-                    <div className="flex items-center gap-2 pt-4 border-t border-gray-200">
-                        <button
-                            onClick={goToPreviousDay}
-                            disabled={isPreviousDayDisabled()}
-                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
-                            aria-label="Go to previous day"
-                        >
-                            ← Prev
-                        </button>
-
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-4 border-t border-gray-200">
+                        {/* Mobile: Date picker first, larger touch target */}
                         <input
                             type="date"
                             value={currentDate}
                             min={getMinDate()}
                             max={getTodayInLocalTimezone()}
                             onChange={(e) => handleDateChange(e.target.value)}
-                            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="sm:order-2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center sm:text-left"
                             aria-label="Select a date"
                         />
 
-                        <button
-                            onClick={goToNextDay}
-                            disabled={isNextDayDisabled()}
-                            className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
-                            aria-label="Go to next day"
-                        >
-                            Next →
-                        </button>
+                        {/* Navigation buttons row */}
+                        <div className="flex gap-2 sm:order-1">
+                            <button
+                                onClick={goToPreviousDay}
+                                disabled={isPreviousDayDisabled()}
+                                className="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
+                                aria-label="Go to previous day"
+                            >
+                                <span className="sm:hidden">←</span>
+                                <span className="hidden sm:inline">← Prev</span>
+                            </button>
 
-                        <div className="flex-1" />
+                            <button
+                                onClick={goToNextDay}
+                                disabled={isNextDayDisabled()}
+                                className="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100 sm:order-3"
+                                aria-label="Go to next day"
+                            >
+                                <span className="sm:hidden">→</span>
+                                <span className="hidden sm:inline">Next →</span>
+                            </button>
+                        </div>
+
+                        <div className="hidden sm:block sm:flex-1 sm:order-4" />
 
                         <button
                             onClick={goToToday}
-                            className="px-3 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-5"
                             aria-label="Go to today"
                             title="Jump to today"
                         >
@@ -731,29 +739,29 @@ export default function PlannerPage() {
             </div>
 
             {/* Main Grid */}
-            <main className="max-w-6xl mx-auto px-6 py-8">
+            <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Progress Summary */}
-                <div className="grid grid-cols-4 gap-4 mb-8">
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-sm">Deep Work</p>
-                        <p className="text-2xl font-bold text-blue-600">{deepWork.filter(d => d.completed).length}/{deepWork.length}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-xs sm:text-sm">Deep Work</p>
+                        <p className="text-xl sm:text-2xl font-bold text-blue-600">{deepWork.filter(d => d.completed).length}/{deepWork.length}</p>
                     </div>
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-sm">Quick Wins</p>
-                        <p className="text-2xl font-bold text-yellow-600">{quickWins.filter(q => q.completed).length}/{quickWins.length}</p>
+                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-xs sm:text-sm">Quick Wins</p>
+                        <p className="text-xl sm:text-2xl font-bold text-yellow-600">{quickWins.filter(q => q.completed).length}/{quickWins.length}</p>
                     </div>
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-sm">Make It Happen</p>
-                        <p className="text-2xl font-bold text-red-600">{makeItHappen?.completed ? '✓' : '○'}</p>
+                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-xs sm:text-sm">Make It Happen</p>
+                        <p className="text-xl sm:text-2xl font-bold text-red-600">{makeItHappen?.completed ? '✓' : '○'}</p>
                     </div>
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-sm">Little Joys</p>
-                        <p className="text-2xl font-bold text-purple-600">{littleJoys.length}/3</p>
+                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                        <p className="text-gray-600 text-xs sm:text-sm">Little Joys</p>
+                        <p className="text-xl sm:text-2xl font-bold text-purple-600">{littleJoys.length}/3</p>
                     </div>
                 </div>
 
                 {/* Planning Zones Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                     <DeepWorkZone
                         items={deepWork}
                         onAdd={handleAddDeepWork}
@@ -785,7 +793,7 @@ export default function PlannerPage() {
                 </div>
 
                 {/* Evening Reflection */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     <LittleJoys
                         joys={littleJoys}
                         onAdd={handleAddJoy}
@@ -802,7 +810,7 @@ export default function PlannerPage() {
                 </div>
 
                 {/* Project Updates Section */}
-                <div className="mt-6">
+                <div className="mt-4 sm:mt-6">
                     <ProjectUpdates
                         projects={projects}
                         updates={projectUpdates}
@@ -815,7 +823,7 @@ export default function PlannerPage() {
                 </div>
 
                 {/* Reflection & Focus */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
                     <ReflectionToday
                         content={reflection}
                         onSave={setReflection}
