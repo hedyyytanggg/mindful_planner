@@ -27,6 +27,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Mindful Planner Team' }],
   creator: 'Mindful Planner',
   publisher: 'Mindful Planner',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
