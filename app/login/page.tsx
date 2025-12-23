@@ -105,12 +105,6 @@ export default function LoginPage() {
                             </a>
                         </p>
                     </div>
-
-                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-700">
-                            <strong>Test Login:</strong> Use any email and password to sign in for testing.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
