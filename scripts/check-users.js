@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 require('dotenv').config({ path: '.env.local' });
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://mindful_user:mindful_dev_password@localhost:5432/mindful_dev',
+    connectionString: process.env.DATABASE_URL,
 });
 
 async function checkUsers() {
