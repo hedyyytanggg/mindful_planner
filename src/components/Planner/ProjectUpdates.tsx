@@ -63,7 +63,7 @@ export function ProjectUpdates({
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900">📚 Activity Log</h2>
+                        <h2 className="text-xl font-bold text-gray-900">📚 Progress Log</h2>
                         <p className="text-sm text-gray-600">Track projects, hobbies, and events ({updates.length} today)</p>
                     </div>
                     {!disabled && (

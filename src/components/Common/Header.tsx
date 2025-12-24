@@ -15,7 +15,7 @@ export function Header() {
     const isActive = (path: string) => pathname === path;
 
     const isActivitiesActive = () => {
-        return ['/quick-wins', '/deep-work', '/make-it-happen', '/little-joys', '/recharge-zones', '/core-memories'].includes(pathname);
+        return ['/quick-wins', '/deep-work', '/make-it-happen', '/little-joys', '/recharge-zones', '/core-memories', '/reflections-today'].includes(pathname);
     };
 
     const navLinkClass = (path: string) => `font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-3 py-2 ${isActive(path)
@@ -50,11 +50,11 @@ export function Header() {
                         </Link>
 
                         <Link
-                            href="/timeline"
-                            className={navLinkClass('/timeline')}
-                            aria-current={isActive('/timeline') ? 'page' : undefined}
+                            href="/progress-log"
+                            className={navLinkClass('/progress-log')}
+                            aria-current={isActive('/progress-log') ? 'page' : undefined}
                         >
-                            <span aria-hidden="true">📜</span> Timeline
+                            <span aria-hidden="true">🔖</span> Progress Log
                         </Link>
 
                         {/* Journey Dropdown */}
@@ -126,10 +126,25 @@ export function Header() {
                                         >
                                             <span aria-hidden="true">💎</span> Core Memories
                                         </Link>
+                                        <Link
+                                            href="/reflections-today"
+                                            className={`block px-4 py-2 text-sm transition ${isActive('/reflections-today') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}
+                                            onClick={() => setShowActivitiesMenu(false)}
+                                        >
+                                            <span aria-hidden="true">💭</span> Reflections for Today
+                                        </Link>
                                     </div>
                                 </>
                             )}
                         </div>
+
+                        <Link
+                            href="/timeline"
+                            className={navLinkClass('/timeline')}
+                            aria-current={isActive('/timeline') ? 'page' : undefined}
+                        >
+                            <span aria-hidden="true">📜</span> Timeline
+                        </Link>
                     </nav>
 
                     {/* Desktop User Menu */}
@@ -230,15 +245,15 @@ export function Header() {
                             </Link>
 
                             <Link
-                                href="/timeline"
-                                className={`block px-3 py-2 rounded-lg ${isActive('/timeline')
+                                href="/progress-log"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/progress-log')
                                     ? 'bg-blue-50 text-blue-600 font-semibold'
                                     : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                                 onClick={() => setShowMobileMenu(false)}
-                                aria-current={isActive('/timeline') ? 'page' : undefined}
+                                aria-current={isActive('/progress-log') ? 'page' : undefined}
                             >
-                                <span aria-hidden="true">📜</span> Timeline
+                                <span aria-hidden="true">🔖</span> Progress Log
                             </Link>
 
                             {/* Journey Section */}
@@ -318,6 +333,30 @@ export function Header() {
                                 aria-current={isActive('/core-memories') ? 'page' : undefined}
                             >
                                 <span aria-hidden="true">💎</span> Core Memories
+                            </Link>
+
+                            <Link
+                                href="/reflections-today"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/reflections-today')
+                                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                onClick={() => setShowMobileMenu(false)}
+                                aria-current={isActive('/reflections-today') ? 'page' : undefined}
+                            >
+                                <span aria-hidden="true">💭</span> Reflections for Today
+                            </Link>
+
+                            <Link
+                                href="/timeline"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/timeline')
+                                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                onClick={() => setShowMobileMenu(false)}
+                                aria-current={isActive('/timeline') ? 'page' : undefined}
+                            >
+                                <span aria-hidden="true">📜</span> Timeline
                             </Link>
 
                             <div className="border-t border-gray-200 mt-4 pt-4">
