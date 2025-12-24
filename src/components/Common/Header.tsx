@@ -10,8 +10,13 @@ export function Header() {
     const { data: session } = useSession();
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
+    const [showActivitiesMenu, setShowActivitiesMenu] = useState(false);
 
     const isActive = (path: string) => pathname === path;
+
+    const isActivitiesActive = () => {
+        return ['/quick-wins', '/deep-work', '/make-it-happen', '/little-joys', '/recharge-zones', '/core-memories'].includes(pathname);
+    };
 
     const navLinkClass = (path: string) => `font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-3 py-2 ${isActive(path)
         ? 'text-blue-600 border-b-2 border-blue-600'
@@ -52,29 +57,79 @@ export function Header() {
                             <span aria-hidden="true">📜</span> Timeline
                         </Link>
 
-                        <Link
-                            href="/features"
-                            className={navLinkClass('/features')}
-                            aria-current={isActive('/features') ? 'page' : undefined}
-                        >
-                            <span aria-hidden="true">✨</span> Features
-                        </Link>
+                        {/* Journey Dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setShowActivitiesMenu(!showActivitiesMenu)}
+                                onMouseEnter={() => setShowActivitiesMenu(true)}
+                                className={`font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-3 py-2 flex items-center gap-1 ${isActivitiesActive()
+                                    ? 'text-blue-600 border-b-2 border-blue-600'
+                                    : 'text-gray-700 hover:text-blue-600'
+                                    }`}
+                                aria-expanded={showActivitiesMenu}
+                            >
+                                <span aria-hidden="true">🗺️</span> Journey
+                                <svg className={`w-4 h-4 transition-transform ${showActivitiesMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
 
-                        <Link
-                            href="/about"
-                            className={navLinkClass('/about')}
-                            aria-current={isActive('/about') ? 'page' : undefined}
-                        >
-                            <span aria-hidden="true">ℹ️</span> About
-                        </Link>
-
-                        <Link
-                            href="/settings"
-                            className={navLinkClass('/settings')}
-                            aria-current={isActive('/settings') ? 'page' : undefined}
-                        >
-                            <span aria-hidden="true">⚙️</span> Settings
-                        </Link>
+                            {showActivitiesMenu && (
+                                <>
+                                    <div
+                                        className="fixed inset-0 z-10"
+                                        onClick={() => setShowActivitiesMenu(false)}
+                                    />
+                                    <div
+                                        className="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-20"
+                                        onMouseLeave={() => setShowActivitiesMenu(false)}
+                                    >
+                                        <Link
+                                            href="/quick-wins"
+                                            className={`block px-4 py-2 text-sm transition ${isActive('/quick-wins') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}
+                                            onClick={() => setShowActivitiesMenu(false)}
+                                        >
+                                            <span aria-hidden="true">⚡</span> Quick Wins
+                                        </Link>
+                                        <Link
+                                            href="/deep-work"
+                                            className={`block px-4 py-2 text-sm transition ${isActive('/deep-work') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}
+                                            onClick={() => setShowActivitiesMenu(false)}
+                                        >
+                                            <span aria-hidden="true">🧠</span> Deep Work
+                                        </Link>
+                                        <Link
+                                            href="/make-it-happen"
+                                            className={`block px-4 py-2 text-sm transition ${isActive('/make-it-happen') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}
+                                            onClick={() => setShowActivitiesMenu(false)}
+                                        >
+                                            <span aria-hidden="true">🎯</span> Make It Happen
+                                        </Link>
+                                        <Link
+                                            href="/little-joys"
+                                            className={`block px-4 py-2 text-sm transition ${isActive('/little-joys') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}
+                                            onClick={() => setShowActivitiesMenu(false)}
+                                        >
+                                            <span aria-hidden="true">✨</span> Little Joys
+                                        </Link>
+                                        <Link
+                                            href="/recharge-zones"
+                                            className={`block px-4 py-2 text-sm transition ${isActive('/recharge-zones') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}
+                                            onClick={() => setShowActivitiesMenu(false)}
+                                        >
+                                            <span aria-hidden="true">🌊</span> Recharge Zones
+                                        </Link>
+                                        <Link
+                                            href="/core-memories"
+                                            className={`block px-4 py-2 text-sm transition ${isActive('/core-memories') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}
+                                            onClick={() => setShowActivitiesMenu(false)}
+                                        >
+                                            <span aria-hidden="true">💎</span> Core Memories
+                                        </Link>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </nav>
 
                     {/* Desktop User Menu */}
@@ -186,40 +241,83 @@ export function Header() {
                                 <span aria-hidden="true">📜</span> Timeline
                             </Link>
 
+                            {/* Journey Section */}
+                            <div className="py-2">
+                                <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Journey
+                                </div>
+                            </div>
+
                             <Link
-                                href="/features"
-                                className={`block px-3 py-2 rounded-lg ${isActive('/features')
+                                href="/quick-wins"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/quick-wins')
                                     ? 'bg-blue-50 text-blue-600 font-semibold'
                                     : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                                 onClick={() => setShowMobileMenu(false)}
-                                aria-current={isActive('/features') ? 'page' : undefined}
+                                aria-current={isActive('/quick-wins') ? 'page' : undefined}
                             >
-                                <span aria-hidden="true">✨</span> Features
+                                <span aria-hidden="true">⚡</span> Quick Wins
                             </Link>
 
                             <Link
-                                href="/about"
-                                className={`block px-3 py-2 rounded-lg ${isActive('/about')
+                                href="/deep-work"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/deep-work')
                                     ? 'bg-blue-50 text-blue-600 font-semibold'
                                     : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                                 onClick={() => setShowMobileMenu(false)}
-                                aria-current={isActive('/about') ? 'page' : undefined}
+                                aria-current={isActive('/deep-work') ? 'page' : undefined}
                             >
-                                <span aria-hidden="true">ℹ️</span> About
+                                <span aria-hidden="true">🧠</span> Deep Work
                             </Link>
 
                             <Link
-                                href="/settings"
-                                className={`block px-3 py-2 rounded-lg ${isActive('/settings')
+                                href="/make-it-happen"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/make-it-happen')
                                     ? 'bg-blue-50 text-blue-600 font-semibold'
                                     : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                                 onClick={() => setShowMobileMenu(false)}
-                                aria-current={isActive('/settings') ? 'page' : undefined}
+                                aria-current={isActive('/make-it-happen') ? 'page' : undefined}
                             >
-                                <span aria-hidden="true">⚙️</span> Settings
+                                <span aria-hidden="true">🎯</span> Make It Happen
+                            </Link>
+
+                            <Link
+                                href="/little-joys"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/little-joys')
+                                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                onClick={() => setShowMobileMenu(false)}
+                                aria-current={isActive('/little-joys') ? 'page' : undefined}
+                            >
+                                <span aria-hidden="true">✨</span> Little Joys
+                            </Link>
+
+                            <Link
+                                href="/recharge-zones"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/recharge-zones')
+                                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                onClick={() => setShowMobileMenu(false)}
+                                aria-current={isActive('/recharge-zones') ? 'page' : undefined}
+                            >
+                                <span aria-hidden="true">🌊</span> Recharge Zones
+                            </Link>
+
+                            <Link
+                                href="/core-memories"
+                                className={`block px-3 py-2 rounded-lg ${isActive('/core-memories')
+                                    ? 'bg-blue-50 text-blue-600 font-semibold'
+                                    : 'text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                onClick={() => setShowMobileMenu(false)}
+                                aria-current={isActive('/core-memories') ? 'page' : undefined}
+                            >
+                                <span aria-hidden="true">💎</span> Core Memories
                             </Link>
 
                             <div className="border-t border-gray-200 mt-4 pt-4">
