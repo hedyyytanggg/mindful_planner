@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { Breadcrumbs } from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
     title: 'I Tried Every Task Management Method. Here\'s What Actually Works.',
@@ -13,6 +14,11 @@ export const metadata: Metadata = {
 export default function BlogPost() {
     return (
         <article className="max-w-3xl mx-auto px-6 py-12">
+            <Breadcrumbs items={[
+                { label: 'Blog', href: '/blog' },
+                { label: 'I Tried Every Task Management Method', href: '/blog/task-list-actually-works' }
+            ]} />
+
             <Link href="/blog" className="text-blue-600 hover:text-blue-700 mb-6 inline-flex items-center gap-2">
                 ← Back to blog
             </Link>
