@@ -130,12 +130,6 @@ export default function SignupPage() {
                             </a>
                         </p>
                     </div>
-
-                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-700">
-                            <strong>Test Signup:</strong> Use any email and password to create a test account.
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
