@@ -1,7 +1,7 @@
 'use client';
 
 import Script from 'next/script';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 // Google Analytics Measurement ID - replace with your actual ID
@@ -19,7 +19,8 @@ declare global {
   }
 }
 
-export function GoogleAnalytics() {
+// Separate component for search params tracking (needs Suspense)
+function GAPageTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -28,13 +29,17 @@ export function GoogleAnalytics() {
     if (!GA_MEASUREMENT_ID) return;
 
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-    
+
     // Send pageview with URL
     window.gtag?.('config', GA_MEASUREMENT_ID, {
       page_path: url,
     });
   }, [pathname, searchParams]);
 
+  return null;
+}
+
+export function GoogleAnalytics() {
   // Don't load in development unless explicitly enabled
   if (!GA_MEASUREMENT_ID) {
     return null;
@@ -61,6 +66,9 @@ export function GoogleAnalytics() {
           `,
         }}
       />
+      <Suspense fallback={null}>
+        <GAPageTracker />
+      </Suspense>
     </>
   );
 }
@@ -81,7 +89,7 @@ export const trackSignup = (userId?: string) => {
     method: 'email',
     user_id: userId,
   });
-  
+
   // Also track as a conversion for Google Ads
   trackEvent('conversion', {
     send_to: 'AW-CONVERSION_ID/CONVERSION_LABEL', // Replace with your Google Ads conversion ID
