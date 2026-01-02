@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/Common';
+import { trackSignup } from '@/components/Analytics';
 
 export default function SignupPage() {
     const router = useRouter();
@@ -68,6 +69,10 @@ export default function SignupPage() {
 
             if (result?.ok) {
                 console.log('Signup successful, redirecting to planner');
+
+                // Track signup conversion
+                trackSignup(email);
+
                 router.push('/planner');
             }
         } catch (err) {
