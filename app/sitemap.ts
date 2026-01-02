@@ -66,6 +66,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.8,
         },
         {
+            url: `${baseUrl}/blog/planning-2026-without-pressure`,
+            lastModified: new Date('2025-12-31'),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        },
+        {
             url: `${baseUrl}/blog/planning-for-prospecting-types`,
             lastModified: new Date('2025-12-31'),
             changeFrequency: 'monthly',

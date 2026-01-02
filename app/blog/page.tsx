@@ -13,6 +13,14 @@ export const metadata: Metadata = {
 export default function BlogPage() {
     const posts = [
         {
+            slug: 'planning-2026-without-pressure',
+            title: 'How I\'m Planning 2026 (Without the New Year Pressure)',
+            excerpt: 'Forget massive resolutions. Here\'s a more sustainable way to approach the new year that actually works.',
+            date: 'Dec 31, 2025',
+            readTime: '7 min read',
+            category: 'Reflection',
+        },
+        {
             slug: 'planning-for-prospecting-types',
             title: 'Planning for People Who Hate Planning (A Guide for Prospecting Types)',
             excerpt: 'If rigid schedules make you anxious and you work best spontaneously, here\'s how to plan without killing your flexibility.',
