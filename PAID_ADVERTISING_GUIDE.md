@@ -3,7 +3,7 @@
 ## Pre-Launch Checklist (Do This First!)
 
 ### 1. Set Up Conversion Tracking
-- [ ] Install Google Analytics 4 (GA4) on your site
+- [x] Install Google Analytics 4 (GA4) on your site
 - [ ] Create conversion events for: signup, trial start, paid conversion
 - [ ] Test that events are firing correctly
 - [ ] Set up UTM parameters for campaign tracking

@@ -90,13 +90,12 @@ export const trackSignup = (userId?: string) => {
     user_id: userId,
   });
 
-  // Also track as a conversion for Google Ads
-  trackEvent('conversion', {
-    send_to: 'AW-CONVERSION_ID/CONVERSION_LABEL', // Replace with your Google Ads conversion ID
-    event_callback: () => {
-      console.log('Signup conversion tracked');
-    }
-  });
+  console.log('Signup conversion tracked');
+
+  // Google Ads conversion tracking (uncomment when you have a Google Ads account)
+  // trackEvent('conversion', {
+  //   send_to: 'AW-XXXXXXXXX/XXXXXXXXXX', // Replace with your actual Google Ads conversion ID
+  // });
 };
 
 export const trackLogin = (userId?: string) => {

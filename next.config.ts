@@ -31,9 +31,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://www.redditstatic.com",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.facebook.com https://www.reddit.com",
+              "frame-src https://www.googletagmanager.com https://td.doubleclick.net",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' blob: data: https:",
+              "img-src 'self' blob: data: https: https://www.facebook.com https://www.google-analytics.com",
               "font-src 'self'",
               "object-src 'none'",
               "base-uri 'self'",
