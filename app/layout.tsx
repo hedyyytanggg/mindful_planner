@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header, Footer } from "@/components/Common";
+import { Header, Footer, JourneyNav } from "@/components/Common";
 import { SessionProviderWrapper } from "@/components/SessionProvider";
 import { GoogleAnalytics } from "@/components/Analytics";
 
@@ -117,6 +117,7 @@ export default function RootLayout({
           </a>
 
           <Header />
+          <JourneyNav />
           <main id="main-content" className="flex-1">
             {children}
           </main>

@@ -6,3 +6,4 @@ export { Checkbox } from './Checkbox';
 export { Alert } from './Alert';
 export { Header } from './Header';
 export { Footer } from './Footer';
+export { JourneyNav } from './JourneyNav';
