@@ -89,8 +89,8 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
         subscriptionStatus,
         stripeCustomerId: subscription.customer as string,
         stripeSubscriptionId: subscription.id,
-        subscriptionEndDate: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000)
+        subscriptionEndDate: (subscription as any).current_period_end
+            ? new Date((subscription as any).current_period_end * 1000)
             : null,
     });
 
@@ -107,8 +107,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     await updateUserSubscription(pool, userId, {
         subscriptionTier: 'free',
         subscriptionStatus: 'canceled',
-        subscriptionEndDate: subscription.ended_at
-            ? new Date(subscription.ended_at * 1000)
+        subscriptionEndDate: (subscription as any).ended_at
+            ? new Date((subscription as any).ended_at * 1000)
             : new Date(),
     });
 
@@ -116,7 +116,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
-    const subscriptionId = invoice.subscription as string;
+    const subscriptionId = (invoice as any).subscription as string;
     if (!subscriptionId) return;
 
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
@@ -126,7 +126,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
-    const userId = invoice.subscription_details?.metadata?.userId;
+    const userId = (invoice as any).subscription_details?.metadata?.userId;
     if (!userId) return;
 
     await updateUserSubscription(pool, userId, {
