@@ -86,6 +86,11 @@ export default function LoginPage() {
                                 required
                                 disabled={isLoading}
                             />
+                            <div className="mt-2 text-right">
+                                <a href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                                    Forgot password?
+                                </a>
+                            </div>
                         </div>
 
                         <Button
