@@ -62,7 +62,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <p className="text-sm text-gray-500">Free to start • No credit card required • Your data stays private</p>
+            <p className="text-sm text-gray-500">Free to start • Your data stays private</p>
           </div>
         </section>
 
@@ -477,7 +477,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <p className="text-sm mt-6 opacity-75">Free to start • No credit card required</p>
+            <p className="text-sm mt-6 opacity-75">Free to start</p>
           </div>
         </section>
       </div>
