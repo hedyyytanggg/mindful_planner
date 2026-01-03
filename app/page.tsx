@@ -44,7 +44,7 @@ export default function Home() {
               Plan Your Day with Purpose,<br />Not Pressure
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              A daily planner that balances productivity with wellbeing. Track what matters—work, hobbies, events, and joy.
+              A daily planner that balances productivity with wellbeing. Plan, document, and reflect on your life—work, hobbies, memories, and growth.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -149,25 +149,25 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-8 rounded-xl shadow-sm text-center">
                 <div className="text-5xl mb-4">🎯</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Zone-Based Planning</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Plan Your Day</h3>
                 <p className="text-gray-600">
-                  Organize your day into purposeful zones: Deep Work, Quick Wins, Recharge, and more. Each zone serves a specific purpose.
+                  Organize your day into purposeful zones: Deep Work, Quick Wins, Recharge, and more. Plan with intention, not just to-dos.
                 </p>
               </div>
 
               <div className="bg-white p-8 rounded-xl shadow-sm text-center">
                 <div className="text-5xl mb-4">📚</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Track What Matters</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Document Your Life</h3>
                 <p className="text-gray-600">
-                  Log progress on projects, hobbies, events. Capture joys and memories. Learn from daily reflections.
+                  Capture progress on projects, hobbies, and goals. Preserve joys and memories. Build a record of your journey.
                 </p>
               </div>
 
               <div className="bg-white p-8 rounded-xl shadow-sm text-center">
                 <div className="text-5xl mb-4">🌱</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Built for Balance</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Reflect & Grow</h3>
                 <p className="text-gray-600">
-                  Productivity zones + wellness zones = sustainable planning. Work hard, rest well, find joy daily.
+                  Learn from daily insights. Track patterns over time. Celebrate wins and learn from challenges.
                 </p>
               </div>
             </div>
@@ -182,46 +182,46 @@ export default function Home() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Deep Work Zone */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-blue-400 transition-colors">
-                <div className="text-4xl mb-3">🎯</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Deep Work Zone</h3>
-                <p className="text-sm text-gray-600">Focus on high-impact work with time blocking and detailed notes.</p>
+              {/* Quick Wins */}
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-yellow-400 transition-colors">
+                <div className="text-4xl mb-3">⚡</div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Quick Wins</h3>
+                <p className="text-sm text-gray-600">Plan and complete small daily victories that build momentum.</p>
               </div>
 
-              {/* Activity Log */}
+              {/* Deep Work */}
               <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-purple-400 transition-colors">
-                <div className="text-4xl mb-3">📚</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Activity Log</h3>
-                <p className="text-sm text-gray-600">Track ongoing projects, hobbies, and events with daily updates.</p>
-              </div>
-
-              {/* Recharge Zone */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-400 transition-colors">
-                <div className="text-4xl mb-3">🔋</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Recharge Zone</h3>
-                <p className="text-sm text-gray-600">Plan breaks and wellness activities to maintain your energy.</p>
+                <div className="text-4xl mb-3">🧠</div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Deep Work</h3>
+                <p className="text-sm text-gray-600">Schedule and document focused work sessions on meaningful projects.</p>
               </div>
 
               {/* Little Joys */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-yellow-400 transition-colors">
-                <div className="text-4xl mb-3">💝</div>
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-pink-400 transition-colors">
+                <div className="text-4xl mb-3">✨</div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Little Joys</h3>
-                <p className="text-sm text-gray-600">Capture positive moments from your day to build gratitude.</p>
+                <p className="text-sm text-gray-600">Capture life's simple pleasures and build a gratitude practice.</p>
+              </div>
+
+              {/* Recharge Zones */}
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-cyan-400 transition-colors">
+                <div className="text-4xl mb-3">🌊</div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Recharge Zones</h3>
+                <p className="text-sm text-gray-600">Plan self-care and wellness activities to maintain your energy.</p>
               </div>
 
               {/* Core Memories */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-pink-400 transition-colors">
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-indigo-400 transition-colors">
                 <div className="text-4xl mb-3">💎</div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Core Memories</h3>
-                <p className="text-sm text-gray-600">Save meaningful moments tied to specific dates for reflection.</p>
+                <p className="text-sm text-gray-600">Preserve meaningful moments and milestones in your life journey.</p>
               </div>
 
-              {/* Reflection */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-indigo-400 transition-colors">
-                <div className="text-4xl mb-3">🤔</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Daily Reflection</h3>
-                <p className="text-sm text-gray-600">Learn and grow from daily insights and accomplishments.</p>
+              {/* Reflections */}
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-400 transition-colors">
+                <div className="text-4xl mb-3">💭</div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Daily Reflections</h3>
+                <p className="text-sm text-gray-600">Journal your insights, lessons learned, and personal growth.</p>
               </div>
             </div>
 
@@ -264,12 +264,12 @@ export default function Home() {
                 <div className="text-5xl mb-4">🎨</div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">For Creators & Hobbyists</h3>
                 <p className="text-gray-600 mb-4">
-                  Track guitar practice, art projects, or garden progress. See your journey and stay consistent.
+                  Document guitar practice, art projects, or garden progress. See your journey unfold and stay consistent.
                 </p>
                 <div className="text-sm text-gray-500">
-                  ✓ Activity tracking<br />
-                  ✓ Progress logging<br />
-                  ✓ Memory capture
+                  ✓ Project documentation<br />
+                  ✓ Progress tracking<br />
+                  ✓ Memory preservation
                 </div>
               </div>
 
@@ -277,12 +277,12 @@ export default function Home() {
                 <div className="text-5xl mb-4">👨‍👩‍👧‍👦</div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">For Parents & Caregivers</h3>
                 <p className="text-gray-600 mb-4">
-                  Juggle responsibilities while making time for yourself. Find joy in the chaos and track what matters.
+                  Plan around responsibilities while making time for yourself. Capture joy in the chaos and document what matters.
                 </p>
                 <div className="text-sm text-gray-500">
                   ✓ Flexible planning<br />
-                  ✓ Self-care zones<br />
-                  ✓ Gratitude practice
+                  ✓ Self-care scheduling<br />
+                  ✓ Memory capture
                 </div>
               </div>
             </div>
@@ -299,17 +299,17 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Start each day with clarity, not chaos</p>
+                <p className="text-lg text-gray-700">Plan each day with clarity and intention</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Finish tasks without sacrificing your wellbeing</p>
+                <p className="text-lg text-gray-700">Document your journey as it unfolds</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Make real progress on personal projects and hobbies</p>
+                <p className="text-lg text-gray-700">Make real progress on projects and hobbies</p>
               </div>
 
               <div className="flex gap-3 items-start">
@@ -319,12 +319,12 @@ export default function Home() {
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">See patterns and growth over time</p>
+                <p className="text-lg text-gray-700">Track patterns and celebrate growth over time</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Never lose track of what brings you joy</p>
+                <p className="text-lg text-gray-700">Preserve memories and moments that matter</p>
               </div>
             </div>
           </div>
