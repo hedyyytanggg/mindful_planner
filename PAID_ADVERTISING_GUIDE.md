@@ -4,8 +4,8 @@
 
 ### 1. Set Up Conversion Tracking
 - [x] Install Google Analytics 4 (GA4) on your site
-- [ ] Create conversion events for: signup, trial start, paid conversion
-- [ ] Test that events are firing correctly
+- [x] Create conversion events for: signup, trial start, paid conversion
+- [x] Test that events are firing correctly
 - [ ] Set up UTM parameters for campaign tracking
 
 ### 2. Optimize Your Landing Page

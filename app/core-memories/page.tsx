@@ -49,6 +49,8 @@ interface MemoryData {
     stats: {
         total: number;
     };
+    isPro?: boolean;
+    limitApplied?: boolean;
 }
 
 export default function CoreMemoriesPage() {
@@ -105,6 +107,7 @@ export default function CoreMemoriesPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
+
             <div className="bg-white shadow-sm border-b border-gray-200 sticky top-14 sm:top-16 z-10">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3">
                     <div className="flex flex-col gap-3">
@@ -152,6 +155,26 @@ export default function CoreMemoriesPage() {
                 </div>
             </div>
 
+            {/* Free Tier Upgrade Banner */}
+            {data.limitApplied && !data.isPro && (
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+                    <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-4 flex items-center justify-between shadow-lg">
+                        <div className="flex items-center gap-3">
+                            <div className="text-2xl">🔒</div>
+                            <div>
+                                <h3 className="font-semibold text-sm sm:text-base">Viewing last 7 days only</h3>
+                                <p className="text-xs sm:text-sm opacity-90">Upgrade to Pro to access your complete history</p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/upgrade"
+                            className="px-4 py-2 bg-white text-blue-600 rounded-lg font-medium hover:bg-gray-50 transition text-sm whitespace-nowrap"
+                        >
+                            Upgrade Now
+                        </Link>
+                    </div>
+                </div>
+            )}
             <main className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
                 {data.memories.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">

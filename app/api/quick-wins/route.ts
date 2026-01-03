@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { query } from '@/lib/db';
+import { getUserByEmail } from '@/lib/dbHelpers';
+import { hasProAccess } from '@/lib/subscription';
 
 export async function GET(request: NextRequest) {
     try {
@@ -14,6 +18,15 @@ export async function GET(request: NextRequest) {
                 { error: 'User ID is required' },
                 { status: 400 }
             );
+        }
+
+        // Get user session to check subscription status
+        const session = await getServerSession(authOptions);
+        let isPro = false;
+
+        if (session?.user?.email) {
+            const user = await getUserByEmail(session.user.email);
+            isPro = user ? hasProAccess(user) : false;
         }
 
         // Calculate date range based on filter
@@ -37,6 +50,17 @@ export async function GET(request: NextRequest) {
             const ninetyDaysAgo = new Date(now);
             ninetyDaysAgo.setDate(now.getDate() - 90);
             dateCondition = `AND dp.plandate >= '${ninetyDaysAgo.toISOString().split('T')[0]}'`;
+        }
+
+        // Apply 7-day limit for free users
+        if (!isPro) {
+            const sevenDaysAgo = new Date(now);
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            const freeUserLimit = `AND dp.plandate >= '${sevenDaysAgo.toISOString().split('T')[0]}'`;
+
+            dateCondition = dateCondition
+                ? `${dateCondition} ${freeUserLimit}`
+                : freeUserLimit;
         }
 
         console.log('Date condition:', dateCondition);
@@ -94,6 +118,8 @@ export async function GET(request: NextRequest) {
                 incomplete: total - completed,
                 completionRate,
             },
+            isPro,
+            limitApplied: !isPro
         });
     } catch (error: unknown) {
         console.error('Error fetching quick wins:', error);

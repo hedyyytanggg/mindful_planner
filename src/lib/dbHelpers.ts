@@ -23,6 +23,11 @@ export interface User {
     timezone: string;
     createdAt: string;
     updatedAt: string;
+    subscription_tier?: string;
+    subscription_status?: string;
+    stripe_customer_id?: string | null;
+    stripe_subscription_id?: string | null;
+    subscription_end_date?: Date | null;
 }
 
 export async function createUser(
@@ -52,7 +57,10 @@ export async function createUser(
 export async function getUserByEmail(email: string): Promise<User | null> {
     try {
         const { rows } = await query<User>(
-            'SELECT * FROM users WHERE email = $1',
+            `SELECT id, email, name, password, timezone, createdAt, updatedAt, 
+                    subscription_tier, subscription_status, stripe_customer_id, 
+                    stripe_subscription_id, subscription_end_date 
+             FROM users WHERE email = $1`,
             [email]
         );
         return rows[0] || null;

@@ -51,6 +51,8 @@ interface ProgressLogData {
         total: number;
         projects: number;
     };
+    isPro?: boolean;
+    limitApplied?: boolean;
 }
 
 export default function ProgressLog() {
@@ -138,6 +140,33 @@ export default function ProgressLog() {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            {/* Free User Limit Banner */}
+            {data?.limitApplied && !data?.isPro && (
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="flex-shrink-0">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="font-semibold">Viewing last 7 days only</p>
+                                    <p className="text-sm text-blue-100">Upgrade to Pro for unlimited history access</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => router.push('/upgrade')}
+                                className="flex-shrink-0 bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50 transition whitespace-nowrap"
+                            >
+                                ✨ Upgrade Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3">
                     <div className="flex items-center justify-between mb-3">

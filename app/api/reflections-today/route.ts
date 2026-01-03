@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { query } from '@/lib/db';
+import { getUserByEmail } from '@/lib/dbHelpers';
+import { hasProAccess } from '@/lib/subscription';
 
 export async function GET(request: NextRequest) {
     try {
@@ -9,6 +13,15 @@ export async function GET(request: NextRequest) {
 
         if (!userId) {
             return NextResponse.json({ error: 'userId required' }, { status: 400 });
+        }
+
+        // Get user session to check subscription status
+        const session = await getServerSession(authOptions);
+        let isPro = false;
+
+        if (session?.user?.email) {
+            const user = await getUserByEmail(session.user.email);
+            isPro = user ? hasProAccess(user) : false;
         }
 
         // Determine date filter
@@ -26,6 +39,17 @@ export async function GET(request: NextRequest) {
         } else if (filter === 'thisMonth') {
             const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
             dateFilter = `AND dp.plandate >= '${startOfMonth.toISOString().split('T')[0]}'`;
+        }
+
+        // Apply 7-day limit for free users
+        if (!isPro) {
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            const freeUserLimit = `AND dp.plandate >= '${sevenDaysAgo.toISOString().split('T')[0]}'`;
+
+            dateFilter = dateFilter
+                ? `${dateFilter} ${freeUserLimit}`
+                : freeUserLimit;
         }
 
         // Fetch all reflections
@@ -71,7 +95,9 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             reflections: reflectionsWithStringDates,
             byDate,
-            stats
+            stats,
+            isPro,
+            limitApplied: !isPro
         });
 
     } catch (error) {

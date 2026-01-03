@@ -56,6 +56,8 @@ interface DeepWorkData {
         completionRate: number;
         totalHours: number;
     };
+    isPro?: boolean;
+    limitApplied?: boolean;
 }
 
 export default function DeepWorkPage() {
@@ -196,6 +198,27 @@ export default function DeepWorkPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Free Tier Upgrade Banner */}
+            {data.limitApplied && !data.isPro && (
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+                    <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-4 flex items-center justify-between shadow-lg">
+                        <div className="flex items-center gap-3">
+                            <div className="text-2xl">🔒</div>
+                            <div>
+                                <h3 className="font-semibold text-sm sm:text-base">Viewing last 7 days only</h3>
+                                <p className="text-xs sm:text-sm opacity-90">Upgrade to Pro to access your complete history</p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/upgrade"
+                            className="px-4 py-2 bg-white text-blue-600 rounded-lg font-medium hover:bg-gray-50 transition text-sm whitespace-nowrap"
+                        >
+                            Upgrade Now
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             {/* Content */}
             <main className="max-w-5xl mx-auto px-4 sm:px-6 py-4">

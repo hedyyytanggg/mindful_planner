@@ -75,12 +75,33 @@ export default function PlannerPage() {
     const userId = (sessionData?.data?.user as any)?.id;
     const authStatus = sessionData?.status || 'loading';
 
+    // Subscription state
+    const [isPro, setIsPro] = useState(false);
+    const [loadingSubscription, setLoadingSubscription] = useState(true);
+
     // Redirect to login if not authenticated
     useEffect(() => {
         if (authStatus === 'unauthenticated') {
             router.push('/login');
+        } else if (authStatus === 'authenticated') {
+            loadSubscriptionStatus();
         }
     }, [authStatus, router]);
+
+    // Load subscription status
+    const loadSubscriptionStatus = async () => {
+        try {
+            const response = await fetch('/api/user/subscription');
+            if (response.ok) {
+                const data = await response.json();
+                setIsPro(data.tier === 'pro');
+            }
+        } catch (err) {
+            console.error('Failed to load subscription:', err);
+        } finally {
+            setLoadingSubscription(false);
+        }
+    };
 
     // Date State
     const [currentDate, setCurrentDate] = useState<string>('');
@@ -287,12 +308,20 @@ export default function PlannerPage() {
         return dateStr < minEditDateStr;
     };
 
-    // Calculate minimum allowed date (1 year ago from today) for viewing
+    // Calculate minimum allowed date based on subscription
     const getMinDate = () => {
         const today = new Date();
-        const oneYearAgo = new Date(today);
-        oneYearAgo.setFullYear(today.getFullYear() - 1);
-        return oneYearAgo.toISOString().split('T')[0];
+        if (!isPro) {
+            // Free users: 7 days back
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            return sevenDaysAgo.toISOString().split('T')[0];
+        } else {
+            // Pro users: 1 year back
+            const oneYearAgo = new Date(today);
+            oneYearAgo.setFullYear(today.getFullYear() - 1);
+            return oneYearAgo.toISOString().split('T')[0];
+        }
     };
 
     // Check if previous day button should be disabled
@@ -631,6 +660,43 @@ export default function PlannerPage() {
 
     return (
         <div className="bg-gradient-to-b from-blue-50 to-gray-50 min-h-screen">
+            {/* Free User 7-Day Limit Banner */}
+            {!isPro && !loadingSubscription && currentDate && (
+                (() => {
+                    const today = new Date();
+                    const planDate = new Date(currentDate);
+                    const daysDiff = Math.floor((today.getTime() - planDate.getTime()) / (1000 * 60 * 60 * 24));
+                    const isNearLimit = daysDiff >= 5 && daysDiff <= 7;
+
+                    if (isNearLimit) {
+                        return (
+                            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                                <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-2">
+                                            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <p className="text-sm">
+                                                <span className="font-semibold">Viewing day {daysDiff} of 7</span>
+                                                <span className="hidden sm:inline"> — Upgrade to Pro for unlimited history</span>
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => router.push('/upgrade')}
+                                            className="flex-shrink-0 bg-white text-blue-600 px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-50 transition"
+                                        >
+                                            Upgrade
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    }
+                    return null;
+                })()
+            )}
+
             {/* Authentication and Status Check */}
             {authStatus === 'loading' && (
                 <div className="bg-blue-50 border-b border-blue-200 px-4 sm:px-6 py-3">
@@ -688,7 +754,6 @@ export default function PlannerPage() {
                         <input
                             type="date"
                             value={currentDate}
-                            min={getMinDate()}
                             max={getTodayInLocalTimezone()}
                             onChange={(e) => handleDateChange(e.target.value)}
                             className="sm:order-2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center sm:text-left"
@@ -742,104 +807,200 @@ export default function PlannerPage() {
                 </div>
             </div>
 
-            {/* Main Grid */}
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-                {/* Progress Summary */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-xs sm:text-sm">Deep Work</p>
-                        <p className="text-xl sm:text-2xl font-bold text-blue-600">{deepWork.filter(d => d.completed).length}/{deepWork.length}</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-xs sm:text-sm">Quick Wins</p>
-                        <p className="text-xl sm:text-2xl font-bold text-yellow-600">{quickWins.filter(q => q.completed).length}/{quickWins.length}</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-xs sm:text-sm">Make It Happen</p>
-                        <p className="text-xl sm:text-2xl font-bold text-red-600">{makeItHappen?.completed ? '✓' : '○'}</p>
-                    </div>
-                    <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
-                        <p className="text-gray-600 text-xs sm:text-sm">Little Joys</p>
-                        <p className="text-xl sm:text-2xl font-bold text-purple-600">{littleJoys.length}/3</p>
-                    </div>
-                </div>
+            {/* Free User - Beyond 7-Day Limit */}
+            {!isPro && !loadingSubscription && currentDate && (() => {
+                const today = new Date();
+                const planDate = new Date(currentDate);
+                const daysDiff = Math.floor((today.getTime() - planDate.getTime()) / (1000 * 60 * 60 * 24));
 
-                {/* Planning Zones Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                    <DeepWorkZone
-                        items={deepWork}
-                        onAdd={handleAddDeepWork}
-                        onUpdate={handleUpdateDeepWork}
-                        onDelete={handleDeleteDeepWork}
-                        disabled={isReadOnly}
-                    />
-                    <QuickWins
-                        items={quickWins}
-                        onAdd={handleAddQuickWin}
-                        onUpdate={handleUpdateQuickWin}
-                        onDelete={handleDeleteQuickWin}
-                        disabled={isReadOnly}
-                    />
-                    <MakeItHappen
-                        item={makeItHappen}
-                        onAdd={handleAddMakeItHappen}
-                        onUpdate={handleUpdateMakeItHappen}
-                        onDelete={handleDeleteMakeItHappen}
-                        disabled={isReadOnly}
-                    />
-                    <RechargeZone
-                        items={recharge}
-                        onAdd={handleAddRecharge}
-                        onUpdate={handleUpdateRecharge}
-                        onDelete={handleDeleteRecharge}
-                        disabled={isReadOnly}
-                    />
-                </div>
+                if (daysDiff > 7) {
+                    return (
+                        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+                            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                                <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-8 text-white text-center">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                        </svg>
+                                    </div>
+                                    <h2 className="text-3xl font-bold mb-2">History Locked</h2>
+                                    <p className="text-lg text-blue-100">This date is beyond your 7-day free access</p>
+                                </div>
 
-                {/* Evening Reflection */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                    <LittleJoys
-                        joys={littleJoys}
-                        onAdd={handleAddJoy}
-                        onDelete={handleDeleteJoy}
-                        disabled={isReadOnly}
-                    />
-                    <CoreMemories
-                        memories={coreMemories}
-                        currentDate={currentDate}
-                        onAdd={handleAddMemory}
-                        onDelete={handleDeleteMemory}
-                        disabled={isReadOnly}
-                    />
-                </div>
+                                <div className="px-6 py-8">
+                                    <div className="text-center mb-8">
+                                        <p className="text-gray-700 text-lg mb-4">
+                                            You're trying to view <span className="font-semibold">{getFormattedDate(currentDate)}</span>
+                                        </p>
+                                        <p className="text-gray-600">
+                                            That's <span className="font-bold text-blue-600">{daysDiff} days ago</span>, but free users can only access the last 7 days.
+                                        </p>
+                                    </div>
 
-                {/* Project Updates Section */}
-                <div className="mt-4 sm:mt-6">
-                    <ProjectUpdates
-                        projects={projects}
-                        updates={projectUpdates}
-                        currentDate={currentDate}
-                        onAddProject={handleAddProject}
-                        onAddUpdate={handleAddProjectUpdate}
-                        onDeleteUpdate={handleDeleteProjectUpdate}
-                        disabled={isReadOnly}
-                    />
-                </div>
+                                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 mb-6 border border-blue-200">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">✨ Upgrade to Pro to unlock:</h3>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center gap-3">
+                                                <svg className="w-6 h-6 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="text-gray-700 font-medium">Unlimited history access (view any past date)</span>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <svg className="w-6 h-6 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="text-gray-700 font-medium">Cloud sync across all devices</span>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <svg className="w-6 h-6 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="text-gray-700 font-medium">Project tracking & insights</span>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <svg className="w-6 h-6 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="text-gray-700 font-medium">Priority support</span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                {/* Reflection & Focus */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
-                    <ReflectionToday
-                        content={reflection}
-                        onSave={setReflection}
-                        disabled={isReadOnly}
-                    />
-                    <FocusTomorrow
-                        content={focusTomorrow}
-                        onSave={setFocusTomorrow}
-                        disabled={isReadOnly}
-                    />
-                </div>
-            </main>
+                                    <div className="flex flex-col sm:flex-row gap-3">
+                                        <button
+                                            onClick={() => router.push('/upgrade')}
+                                            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 rounded-lg font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition shadow-lg"
+                                        >
+                                            ✨ Upgrade to Pro — $1.99/month
+                                        </button>
+                                        <button
+                                            onClick={goToToday}
+                                            className="flex-1 bg-gray-100 text-gray-700 px-6 py-4 rounded-lg font-medium hover:bg-gray-200 transition"
+                                        >
+                                            ← Back to Today
+                                        </button>
+                                    </div>
+
+                                    <p className="text-center text-sm text-gray-500 mt-6">
+                                        No credit card required for free tier • Cancel anytime
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+                return null;
+            })()}
+
+            {/* Show planner content only if within allowed date range */}
+            {(isPro || loadingSubscription || !currentDate || (() => {
+                const today = new Date();
+                const planDate = new Date(currentDate);
+                const daysDiff = Math.floor((today.getTime() - planDate.getTime()) / (1000 * 60 * 60 * 24));
+                return daysDiff <= 7;
+            })()) && (
+                    <>
+                        {/* Main Grid */}
+                        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+                            {/* Progress Summary */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                                <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                                    <p className="text-gray-600 text-xs sm:text-sm">Deep Work</p>
+                                    <p className="text-xl sm:text-2xl font-bold text-blue-600">{deepWork.filter(d => d.completed).length}/{deepWork.length}</p>
+                                </div>
+                                <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                                    <p className="text-gray-600 text-xs sm:text-sm">Quick Wins</p>
+                                    <p className="text-xl sm:text-2xl font-bold text-yellow-600">{quickWins.filter(q => q.completed).length}/{quickWins.length}</p>
+                                </div>
+                                <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                                    <p className="text-gray-600 text-xs sm:text-sm">Make It Happen</p>
+                                    <p className="text-xl sm:text-2xl font-bold text-red-600">{makeItHappen?.completed ? '✓' : '○'}</p>
+                                </div>
+                                <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border border-gray-200">
+                                    <p className="text-gray-600 text-xs sm:text-sm">Little Joys</p>
+                                    <p className="text-xl sm:text-2xl font-bold text-purple-600">{littleJoys.length}/3</p>
+                                </div>
+                            </div>
+
+                            {/* Planning Zones Grid */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                                <DeepWorkZone
+                                    items={deepWork}
+                                    onAdd={handleAddDeepWork}
+                                    onUpdate={handleUpdateDeepWork}
+                                    onDelete={handleDeleteDeepWork}
+                                    disabled={isReadOnly}
+                                />
+                                <QuickWins
+                                    items={quickWins}
+                                    onAdd={handleAddQuickWin}
+                                    onUpdate={handleUpdateQuickWin}
+                                    onDelete={handleDeleteQuickWin}
+                                    disabled={isReadOnly}
+                                />
+                                <MakeItHappen
+                                    item={makeItHappen}
+                                    onAdd={handleAddMakeItHappen}
+                                    onUpdate={handleUpdateMakeItHappen}
+                                    onDelete={handleDeleteMakeItHappen}
+                                    disabled={isReadOnly}
+                                />
+                                <RechargeZone
+                                    items={recharge}
+                                    onAdd={handleAddRecharge}
+                                    onUpdate={handleUpdateRecharge}
+                                    onDelete={handleDeleteRecharge}
+                                    disabled={isReadOnly}
+                                />
+                            </div>
+
+                            {/* Evening Reflection */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                                <LittleJoys
+                                    joys={littleJoys}
+                                    onAdd={handleAddJoy}
+                                    onDelete={handleDeleteJoy}
+                                    disabled={isReadOnly}
+                                />
+                                <CoreMemories
+                                    memories={coreMemories}
+                                    currentDate={currentDate}
+                                    onAdd={handleAddMemory}
+                                    onDelete={handleDeleteMemory}
+                                    disabled={isReadOnly}
+                                />
+                            </div>
+
+                            {/* Project Updates Section */}
+                            <div className="mt-4 sm:mt-6">
+                                <ProjectUpdates
+                                    projects={projects}
+                                    updates={projectUpdates}
+                                    currentDate={currentDate}
+                                    onAddProject={handleAddProject}
+                                    onAddUpdate={handleAddProjectUpdate}
+                                    onDeleteUpdate={handleDeleteProjectUpdate}
+                                    disabled={isReadOnly}
+                                />
+                            </div>
+
+                            {/* Reflection & Focus */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
+                                <ReflectionToday
+                                    content={reflection}
+                                    onSave={setReflection}
+                                    disabled={isReadOnly}
+                                />
+                                <FocusTomorrow
+                                    content={focusTomorrow}
+                                    onSave={setFocusTomorrow}
+                                    disabled={isReadOnly}
+                                />
+                            </div>
+                        </main>
+                    </>
+                )}
         </div>
     );
 }

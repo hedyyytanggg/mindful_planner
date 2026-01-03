@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { query } from '@/lib/db';
+import { getUserByEmail } from '@/lib/dbHelpers';
+import { hasProAccess } from '@/lib/subscription';
 
 export async function GET(request: NextRequest) {
     try {
@@ -15,6 +19,17 @@ export async function GET(request: NextRequest) {
                 { status: 400 }
             );
         }
+
+        // Get user session to check subscription status
+        const session = await getServerSession(authOptions);
+        let isPro = false;
+
+        if (session?.user?.email) {
+            const user = await getUserByEmail(session.user.email);
+            isPro = user ? hasProAccess(user) : false;
+        }
+
+        console.log('User subscription status:', { isPro });
 
         // Calculate date range based on filter
         let dateCondition = '';
@@ -34,6 +49,20 @@ export async function GET(request: NextRequest) {
             const thirtyDaysAgo = new Date(now);
             thirtyDaysAgo.setDate(now.getDate() - 30);
             dateCondition = `AND dp.plandate >= '${thirtyDaysAgo.toISOString().split('T')[0]}'`;
+        }
+
+        // Apply 7-day limit for free users
+        if (!isPro) {
+            const sevenDaysAgo = new Date(now);
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            const freeUserLimit = `AND dp.plandate >= '${sevenDaysAgo.toISOString().split('T')[0]}'`;
+
+            // Combine with existing date condition if present
+            dateCondition = dateCondition
+                ? `${dateCondition} ${freeUserLimit}`
+                : freeUserLimit;
+
+            console.log('Applied 7-day limit for free user');
         }
 
         console.log('Date condition:', dateCondition);
@@ -94,6 +123,8 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             entries,
             total: entries.length,
+            isPro,
+            limitApplied: !isPro,
         });
     } catch (error: unknown) {
         console.error('Error fetching timeline:', error);
