@@ -4,8 +4,29 @@ import { Metadata } from "next";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
 export const metadata: Metadata = {
-  title: 'Mindful Daily Planner — Balance Productivity & Wellness',
-  description: 'Plan your day with purpose, not pressure. A daily planner that balances productivity with wellbeing. Track deep work, quick wins, recharge, and joy.',
+  title: 'Mindful Planner — Daily Planning for Productivity & Wellness',
+  description: 'Mindful Planner helps you plan your day with purpose, not pressure. Balance productivity with wellbeing. Track deep work, quick wins, recharge zones, and daily joy.',
+  keywords: ['mindful planner', 'daily planner', 'productivity planner', 'wellness planner', 'work life balance planner', 'mindful productivity', 'daily planning app'],
+  openGraph: {
+    title: 'Mindful Planner — Daily Planning for Productivity & Wellness',
+    description: 'Plan your day with purpose, not pressure. Balance productivity with wellbeing.',
+    url: baseUrl,
+    type: 'website',
+    images: [
+      {
+        url: `${baseUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'Mindful Planner - Daily Planning App',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mindful Planner — Daily Planning for Productivity & Wellness',
+    description: 'Plan your day with purpose, not pressure. Balance productivity with wellbeing.',
+    images: [`${baseUrl}/og-image.png`],
+  },
   alternates: {
     canonical: baseUrl,
   },
@@ -17,9 +38,10 @@ export default function Home() {
   const homepageSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Mindful Daily Planner',
+    name: 'Mindful Planner',
+    alternateName: 'Mindful Daily Planner',
     url: baseUrl,
-    description: 'A daily planner that balances productivity with wellbeing',
+    description: 'A mindful planner that balances productivity with wellbeing. Plan your day with purpose, not pressure.',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
@@ -41,10 +63,10 @@ export default function Home() {
         <section className="bg-gradient-to-b from-blue-50 to-white py-20 px-6">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Plan Your Day with Purpose,<br />Not Pressure
+              Mindful Planner:<br />Plan Your Day with Purpose, Not Pressure
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              A daily planner that balances productivity with wellbeing. Plan, document, and reflect on your life—work, hobbies, memories, and growth.
+              A mindful daily planner that balances productivity with wellbeing. Plan, document, and reflect on your life—work, hobbies, memories, and growth.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
