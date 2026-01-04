@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   creator: 'Mindful Planner',
   publisher: 'Mindful Planner',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   },
   openGraph: {
     type: 'website',

@@ -4,12 +4,12 @@ import { Metadata } from "next";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
 export const metadata: Metadata = {
-  title: 'Mindful Planner — Daily Planning for Productivity & Wellness',
-  description: 'Mindful Planner helps you plan your day with purpose, not pressure. Balance productivity with wellbeing. Track deep work, quick wins, recharge zones, and daily joy.',
-  keywords: ['mindful planner', 'daily planner', 'productivity planner', 'wellness planner', 'work life balance planner', 'mindful productivity', 'daily planning app'],
+  title: 'Mindful Planner — Balance Productivity & Wellbeing',
+  description: 'A daily planner that helps you accomplish what matters while staying mentally healthy. Plan your day with purpose and kindness, not pressure.',
+  keywords: ['mindful planner', 'wellness planner', 'work life balance', 'sustainable productivity', 'mental health planner', 'daily planning app', 'self-care planner'],
   openGraph: {
-    title: 'Mindful Planner — Daily Planning for Productivity & Wellness',
-    description: 'Plan your day with purpose, not pressure. Balance productivity with wellbeing.',
+    title: 'Mindful Planner — Balance Productivity & Wellbeing',
+    description: 'A daily planner that helps you accomplish what matters while honoring your need for rest and joy.',
     url: baseUrl,
     type: 'website',
     images: [
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mindful Planner — Daily Planning for Productivity & Wellness',
-    description: 'Plan your day with purpose, not pressure. Balance productivity with wellbeing.',
+    title: 'Mindful Planner — Balance Productivity & Wellbeing',
+    description: 'A daily planner that helps you accomplish what matters while staying mentally healthy.',
     images: [`${baseUrl}/og-image.png`],
   },
   alternates: {
@@ -63,10 +63,10 @@ export default function Home() {
         <section className="bg-gradient-to-b from-blue-50 to-white py-20 px-6">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Mindful Planner:<br />Plan Your Day with Purpose, Not Pressure
+              Plan Your Day with<br />Purpose and Kindness
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              A mindful daily planner that balances productivity with wellbeing. Plan, document, and reflect on your life—work, hobbies, memories, and growth.
+              A daily planner that helps you accomplish what matters while honoring your need for rest, joy, and balance. Sustainable productivity starts here.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -74,7 +74,7 @@ export default function Home() {
                 href="/signup"
                 className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg"
               >
-                Start Planning Today
+                Start Planning Mindfully
               </Link>
               <Link
                 href="/features"
@@ -105,8 +105,8 @@ export default function Home() {
                 <span className="text-sm font-semibold text-gray-700">Secure Storage</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-2xl">🌱</span>
-                <span className="text-sm font-semibold text-gray-700">Built for Balance</span>
+                <span className="text-2xl">🧠</span>
+                <span className="text-sm font-semibold text-gray-700">Mental Health First</span>
               </div>
             </div>
           </div>
@@ -116,42 +116,42 @@ export default function Home() {
         <section className="py-20 px-6">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
-              Tired of Planning Tools That Feel Like Work?
+              Planning Should Feel Good, Not Guilty
             </h2>
             <p className="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-              Most productivity apps treat you like a machine. We built something different.
+              Most productivity apps don't account for your humanity. We're building something different that honors both your ambitions and your wellbeing.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               <div className="flex gap-4 items-start p-6 bg-gray-50 rounded-lg">
-                <span className="text-3xl flex-shrink-0">❌</span>
+                <span className="text-3xl flex-shrink-0">🌸</span>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">To-do lists that ignore your energy</h3>
-                  <p className="text-sm text-gray-600">Tasks pile up without considering when you're most focused or need rest.</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">Rest deserves a place in your plan</h3>
+                  <p className="text-sm text-gray-600">Breaks shouldn't feel like failure. Your energy matters as much as your output.</p>
                 </div>
               </div>
 
               <div className="flex gap-4 items-start p-6 bg-gray-50 rounded-lg">
-                <span className="text-3xl flex-shrink-0">❌</span>
+                <span className="text-3xl flex-shrink-0">✨</span>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Apps that neglect your wellbeing</h3>
-                  <p className="text-sm text-gray-600">Productivity at the cost of burnout. No space for recharge or joy.</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">Progress should feel achievable</h3>
+                  <p className="text-sm text-gray-600">Small, meaningful wins build confidence better than overwhelming lists that never end.</p>
                 </div>
               </div>
 
               <div className="flex gap-4 items-start p-6 bg-gray-50 rounded-lg">
-                <span className="text-3xl flex-shrink-0">❌</span>
+                <span className="text-3xl flex-shrink-0">💛</span>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Planners that lose track of hobbies</h3>
-                  <p className="text-sm text-gray-600">Your guitar sits untouched. Projects abandoned. No progress tracking.</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">Joy belongs in your day too</h3>
+                  <p className="text-sm text-gray-600">Your hobbies, passions, and simple pleasures deserve intentional time and attention.</p>
                 </div>
               </div>
 
               <div className="flex gap-4 items-start p-6 bg-gray-50 rounded-lg">
-                <span className="text-3xl flex-shrink-0">❌</span>
+                <span className="text-3xl flex-shrink-0">🧭</span>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Complex tools that add stress</h3>
-                  <p className="text-sm text-gray-600">Too many features, too much setup. Planning becomes another chore.</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">Busy doesn't equal meaningful</h3>
+                  <p className="text-sm text-gray-600">True productivity means making progress on what actually matters to you.</p>
                 </div>
               </div>
             </div>
@@ -162,34 +162,34 @@ export default function Home() {
         <section className="bg-gradient-to-b from-blue-50 to-purple-50 py-20 px-6">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
-              A Better Way to Plan Your Day
+              A Planner That Honors Your Whole Self
             </h2>
             <p className="text-lg text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-              Zone-based planning that honors both your productivity and your humanity.
+              Balance meaningful work with rest and joy. Make sustainable progress while taking care of yourself.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-8 rounded-xl shadow-sm text-center">
                 <div className="text-5xl mb-4">🎯</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Plan Your Day</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Honor Your Energy</h3>
                 <p className="text-gray-600">
-                  Organize your day into purposeful zones: Deep Work, Quick Wins, Recharge, and more. Plan with intention, not just to-dos.
+                  Plan Recharge Zones alongside your work. Rest and renewal are part of sustainable productivity, not obstacles to it.
                 </p>
               </div>
 
               <div className="bg-white p-8 rounded-xl shadow-sm text-center">
                 <div className="text-5xl mb-4">📚</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Document Your Life</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Build Momentum Gently</h3>
                 <p className="text-gray-600">
-                  Capture progress on projects, hobbies, and goals. Preserve joys and memories. Build a record of your journey.
+                  Focus on 3 achievable daily tasks. Celebrate little joys along the way. Progress feels better when it's sustainable.
                 </p>
               </div>
 
               <div className="bg-white p-8 rounded-xl shadow-sm text-center">
                 <div className="text-5xl mb-4">🌱</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Reflect & Grow</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Reflect with Compassion</h3>
                 <p className="text-gray-600">
-                  Learn from daily insights. Track patterns over time. Celebrate wins and learn from challenges.
+                  Focus on what you did accomplish. Daily reflection helps you learn and grow. Watch your progress unfold kindly.
                 </p>
               </div>
             </div>
@@ -262,49 +262,49 @@ export default function Home() {
         <section className="bg-gray-50 py-20 px-6">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
-              Who It's For
+              Made for People, Not Productivity Machines
             </h2>
             <p className="text-lg text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-              Whether you're crushing deadlines, building projects, or juggling life—this is for you.
+              If you've ever felt burned out by your own to-do list, this is for you.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-8 rounded-xl shadow-sm">
                 <div className="text-5xl mb-4">💼</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">For Professionals</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Burned-Out Professionals</h3>
                 <p className="text-gray-600 mb-4">
-                  Balance deep work with energy management. Structure your day for maximum impact without burning out.
+                  You're productive but exhausted. Accomplished but anxious. Let's fix that. Get work done while staying mentally healthy.
                 </p>
                 <div className="text-sm text-gray-500">
-                  ✓ Time-blocked tasks<br />
-                  ✓ Energy tracking<br />
-                  ✓ Daily reflections
+                  ✓ Guilt-free breaks<br />
+                  ✓ Energy management<br />
+                  ✓ Sustainable pace
                 </div>
               </div>
 
               <div className="bg-white p-8 rounded-xl shadow-sm">
                 <div className="text-5xl mb-4">🎨</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">For Creators & Hobbyists</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">People with ADHD</h3>
                 <p className="text-gray-600 mb-4">
-                  Document guitar practice, art projects, or garden progress. See your journey unfold and stay consistent.
+                  Small achievable wins. Breaks that don't feel like failure. Positive reinforcement instead of shame. Finally, a planner that works with your brain.
                 </p>
                 <div className="text-sm text-gray-500">
-                  ✓ Project documentation<br />
-                  ✓ Progress tracking<br />
-                  ✓ Memory preservation
+                  ✓ Limited daily tasks<br />
+                  ✓ Flexible structure<br />
+                  ✓ Celebration-focused
                 </div>
               </div>
 
               <div className="bg-white p-8 rounded-xl shadow-sm">
-                <div className="text-5xl mb-4">👨‍👩‍👧‍👦</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">For Parents & Caregivers</h3>
+                <div className="text-5xl mb-4">🧘</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Anyone Recovering from Burnout</h3>
                 <p className="text-gray-600 mb-4">
-                  Plan around responsibilities while making time for yourself. Capture joy in the chaos and document what matters.
+                  Rebuilding your relationship with productivity. Learning to do meaningful work without destroying yourself. You're not lazy. You're healing.
                 </p>
                 <div className="text-sm text-gray-500">
-                  ✓ Flexible planning<br />
-                  ✓ Self-care scheduling<br />
-                  ✓ Memory capture
+                  ✓ Gentle pacing<br />
+                  ✓ Self-compassion built in<br />
+                  ✓ No guilt, no shame
                 </div>
               </div>
             </div>
@@ -315,38 +315,38 @@ export default function Home() {
         <section className="py-20 px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16">
-              What You'll Gain
+              What Actually Changes
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Plan each day with clarity and intention</p>
+                <p className="text-lg text-gray-700">Stop feeling guilty for being human</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Document your journey as it unfolds</p>
+                <p className="text-lg text-gray-700">Prevent burnout before it happens</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Make real progress on projects and hobbies</p>
+                <p className="text-lg text-gray-700">Get meaningful work done sustainably</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Build habits of reflection and gratitude</p>
+                <p className="text-lg text-gray-700">Reduce anxiety about what you "should" be doing</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Track patterns and celebrate growth over time</p>
+                <p className="text-lg text-gray-700">Feel accomplished without feeling exhausted</p>
               </div>
 
               <div className="flex gap-3 items-start">
                 <span className="text-green-500 text-2xl flex-shrink-0">✓</span>
-                <p className="text-lg text-gray-700">Preserve memories and moments that matter</p>
+                <p className="text-lg text-gray-700">Rediscover what makes you happy</p>
               </div>
             </div>
           </div>
@@ -356,10 +356,10 @@ export default function Home() {
         <section className="py-20 px-6 bg-white">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
-              What Our Users Say
+              You're Not Alone
             </h2>
             <p className="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-              Join thousands finding balance between productivity and wellbeing
+              Thousands of people recovering from toxic productivity culture
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
