@@ -51,7 +51,7 @@ export default function LoginPage() {
                     <p className="text-gray-600 mb-2">Sign in to your Mindful Planner account</p>
                     <p className="text-sm text-gray-500 mb-8">Don't have an account? <a href="/signup" className="text-blue-600 hover:underline font-medium">Create one here</a></p>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                         {error && (
                             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                                 <p className="text-sm text-red-700">{error}</p>
